@@ -7,8 +7,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.index197511.memo.R
 
 class HomeRecyclerAdapter(
-    private val itemList: List<String>
-//    private val itemClickListener: itemClickListener
+    private val itemList: List<String>,
+    private val itemClickListener: HomeRecyclerViewHolder.ItemClickListener
 ) : RecyclerView.Adapter<HomeRecyclerViewHolder>() {
     private var myRecyclerView: RecyclerView? = null
 
@@ -37,11 +37,11 @@ class HomeRecyclerAdapter(
         Log.i("Adapter", "onCreateViewHolder")
         val mView = LayoutInflater.from(parent.context).inflate(R.layout.list_item, parent, false)
 
-//        mView.setOnClickListener { view ->
-//            myRecyclerView?.let {
-//                itemClickListener.onItemClick(view, it.getChildAdapterPosition(view))
-//            }
-//        }
+        mView.setOnClickListener { view ->
+            myRecyclerView?.let {
+                itemClickListener.onItemClick(view, it.getChildAdapterPosition(view))
+            }
+        }
 
         return HomeRecyclerViewHolder(mView)
     }

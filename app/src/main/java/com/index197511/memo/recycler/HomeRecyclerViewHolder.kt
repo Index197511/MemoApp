@@ -12,8 +12,8 @@ class HomeRecyclerViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     val itemImageView: ImageView = view.findViewById(R.id.itemImageView)
 
 
-//    interface ItemClickListener {
-//        fun onItemClick(view: View, position: Int)
-//    }
+    interface ItemClickListener {
+        fun onItemClick(view: View, position: Int)
+    }
 
 }

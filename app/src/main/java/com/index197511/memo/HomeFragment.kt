@@ -5,13 +5,13 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.index197511.memo.databinding.HomeFragmentBinding
 import com.index197511.memo.recycler.HomeRecyclerAdapter
-import kotlinx.android.synthetic.main.home_fragment.*
-import java.lang.IllegalArgumentException
+import com.index197511.memo.recycler.HomeRecyclerViewHolder
 
 
 class HomeFragment : Fragment() {
@@ -29,7 +29,11 @@ class HomeFragment : Fragment() {
         val hoges: List<String> = mutableListOf<String>("a", "b", "c", "d")
 
         val recyclerView = binding.memoRecyclerView ?: return null
-        val adapter = HomeRecyclerAdapter(hoges)
+        val adapter = HomeRecyclerAdapter(hoges, object : HomeRecyclerViewHolder.ItemClickListener {
+            override fun onItemClick(view: View, position: Int) {
+                this@HomeFragment.onItemClick(view, position)
+            }
+        })
 
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(activity)
@@ -39,6 +43,7 @@ class HomeFragment : Fragment() {
     }
 
     fun onItemClick(tappedView: View, position: Int) {
+        Toast.makeText(context, "tapped ${position}", Toast.LENGTH_SHORT).show()
         Log.i("HomeFragment", "tapped ${position}")
     }
 
