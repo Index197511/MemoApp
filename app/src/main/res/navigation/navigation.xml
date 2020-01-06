@@ -12,7 +12,8 @@
         tools:layout="@layout/home_fragment">
         <action
             android:id="@+id/action_homeFragment_to_memoPageFragment"
-            app:destination="@id/memoPageFragment" />
+            app:destination="@id/memoPageFragment"
+            app:exitAnim="@anim/slide_to_left" />
     </fragment>
     <fragment
         android:id="@+id/memoPageFragment"
