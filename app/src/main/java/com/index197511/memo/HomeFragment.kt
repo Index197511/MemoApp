@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.index197511.memo.databinding.HomeFragmentBinding
 import com.index197511.memo.recycler.HomeRecyclerAdapter
@@ -24,6 +25,7 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         Log.i("HomeFragment", "called onCreateView")
+
         binding = DataBindingUtil.inflate(inflater, R.layout.home_fragment, container, false)
 
         val hoges: List<String> = mutableListOf<String>("a", "b", "c", "d")
@@ -39,12 +41,18 @@ class HomeFragment : Fragment() {
         recyclerView.layoutManager = LinearLayoutManager(activity)
 
         setHasOptionsMenu(true)
+
         return binding.root
     }
 
     fun onItemClick(tappedView: View, position: Int) {
-        Toast.makeText(context, "tapped ${position}", Toast.LENGTH_SHORT).show()
-        Log.i("HomeFragment", "tapped ${position}")
+
+        val content = position.toString()
+        val action =  HomeFragmentDirections.actionHomeFragmentToMemoPageFragment(content)
+        findNavController().navigate(action)
+
+//        Toast.makeText(context, "tapped ${position}", Toast.LENGTH_SHORT).show()
+//        Log.i("HomeFragment", "tapped ${position}")
     }
 
 

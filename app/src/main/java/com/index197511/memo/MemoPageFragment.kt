@@ -1,26 +1,36 @@
 package com.index197511.memo
 
-import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.fragment.navArgs
+import com.index197511.memo.databinding.MemoPageFragmentBinding
 
 
 class MemoPageFragment : Fragment() {
 
-    companion object {
-        fun newInstance() = MemoPageFragment()
-    }
-
+    private val args: MemoPageFragmentArgs by navArgs()
+    private lateinit var memoBinding: MemoPageFragmentBinding
     private lateinit var viewModel: MemoPageViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.memo_page_fragment, container, false)
+
+        memoBinding =
+            DataBindingUtil.inflate(inflater, R.layout.memo_page_fragment, container, false)
+
+        val fuga = mutableListOf<String>("select A", "select B", "select C", "select D")
+
+        memoBinding.memoContent.text = fuga.get(args.content.toInt())
+
+
+        return memoBinding.root
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -28,5 +38,6 @@ class MemoPageFragment : Fragment() {
         viewModel = ViewModelProviders.of(this).get(MemoPageViewModel::class.java)
         // TODO: Use the ViewModel
     }
+
 
 }
