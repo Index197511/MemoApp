@@ -13,16 +13,19 @@ class HomeRecyclerAdapter(
     private var myRecyclerView: RecyclerView? = null
 
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
+        Log.i("HomeRecyclerAdapter", "onAttached")
         super.onAttachedToRecyclerView(recyclerView)
         myRecyclerView = recyclerView
     }
 
     override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
         super.onDetachedFromRecyclerView(recyclerView)
+        Log.i("HomeRecyclerAdapter", "onDetached")
         myRecyclerView = null
     }
 
     override fun onBindViewHolder(holder: HomeRecyclerViewHolder, position: Int) {
+        Log.i("HomeRecyclerViewAdapter", "onBind")
         holder.let {
             it.itemTextView.text = itemList.get(position)
             it.itemImageView.setImageResource(R.mipmap.ic_launcher)
@@ -35,14 +38,14 @@ class HomeRecyclerAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HomeRecyclerViewHolder {
         Log.i("Adapter", "onCreateViewHolder")
-        val mView = LayoutInflater.from(parent.context).inflate(R.layout.list_item, parent, false)
+        val myView = LayoutInflater.from(parent.context).inflate(R.layout.list_item, parent, false)
 
-        mView.setOnClickListener { view ->
+        myView.setOnClickListener { view ->
             myRecyclerView?.let {
                 itemClickListener.onItemClick(view, it.getChildAdapterPosition(view))
             }
         }
 
-        return HomeRecyclerViewHolder(mView)
+        return HomeRecyclerViewHolder(myView)
     }
 }
