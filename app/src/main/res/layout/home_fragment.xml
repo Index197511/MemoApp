@@ -7,7 +7,7 @@
     <data>
         <variable
             name="homeFragment"
-            type="com.index197511.memo.HomeFragment" />
+            type="com.index197511.memo.HomeFragmentViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

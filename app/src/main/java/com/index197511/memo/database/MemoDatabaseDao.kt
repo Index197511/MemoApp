@@ -15,9 +15,12 @@ interface MemoDatabaseDao {
     fun update(memo: Memo)
 
     @Query("SELECt * from memo_table WHERE memoId = :key")
-    fun get(key: Long): Memo?
+    fun get(key: Int): Memo?
 
     @Query("SELECT * FROM memo_table ORDER BY memoId DESC")
     fun getAllMemo(): LiveData<List<Memo>>
+
+    @Query("DELETE FROM memo_table WHERE memoId = :key")
+    fun delete(key: Int)
 
 }

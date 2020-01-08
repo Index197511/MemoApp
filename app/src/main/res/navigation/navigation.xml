@@ -23,7 +23,7 @@
 
         <argument
             android:name="content"
-            app:argType="string" />
+            app:argType="com.index197511.memo.database.Memo" />
 
     </fragment>
 
