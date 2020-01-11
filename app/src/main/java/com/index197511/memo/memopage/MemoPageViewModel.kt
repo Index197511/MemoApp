@@ -1,4 +1,4 @@
-package com.index197511.memo
+package com.index197511.memo.memopage
 
 import androidx.lifecycle.ViewModel
 

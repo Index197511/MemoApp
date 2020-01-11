@@ -2,13 +2,13 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".MemoPageFragment">
+    tools:context=".memopage.MemoPageFragment">
 
     <data>
 
         <variable
             name="memoPageFragment"
-            type="com.index197511.memo.MemoPageFragment" />
+            type="com.index197511.memo.memopage.MemoPageFragment" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

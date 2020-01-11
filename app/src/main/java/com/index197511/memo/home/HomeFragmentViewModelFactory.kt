@@ -1,4 +1,4 @@
-package com.index197511.memo
+package com.index197511.memo.home
 
 import android.app.Application
 import androidx.lifecycle.ViewModel
@@ -13,7 +13,10 @@ class HomeFragmentViewModelFactory(
     @Suppress("unchecked_cast")
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(HomeFragmentViewModel::class.java)) {
-            return HomeFragmentViewModel(dataSource, application) as T
+            return HomeFragmentViewModel(
+                dataSource,
+                application
+            ) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

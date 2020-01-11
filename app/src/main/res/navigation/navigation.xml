@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.index197511.memo.HomeFragment"
+        android:name="com.index197511.memo.home.HomeFragment"
         android:label="home_fragment"
         tools:layout="@layout/home_fragment">
         <action
@@ -17,7 +17,7 @@
     </fragment>
     <fragment
         android:id="@+id/memoPageFragment"
-        android:name="com.index197511.memo.MemoPageFragment"
+        android:name="com.index197511.memo.memopage.MemoPageFragment"
         android:label="memo_page_fragment"
         tools:layout="@layout/memo_page_fragment">
 

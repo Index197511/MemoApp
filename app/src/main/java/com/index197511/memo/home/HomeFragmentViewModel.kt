@@ -1,12 +1,12 @@
-package com.index197511.memo
+package com.index197511.memo.home
 
 import android.app.Application
 import android.util.Log
 import android.view.View
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.navigation.Navigation.findNavController
-import androidx.navigation.fragment.findNavController
 import com.index197511.memo.database.Memo
 import com.index197511.memo.database.MemoDatabaseDao
 import kotlinx.coroutines.*
@@ -16,7 +16,26 @@ class HomeFragmentViewModel(val database: MemoDatabaseDao, application: Applicat
 
     private var viewModelJob = Job()
     private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
-    private val memos = database.getAllMemo()
+    private val _allMemoTitle = MutableLiveData<List<String>>()
+    val allMemoTitle: LiveData<List<String>>
+        get() = _allMemoTitle
+
+    init {
+        initializeScreen()
+    }
+
+    private fun initializeScreen() {
+        runBlocking {
+            _allMemoTitle.value = getAllMemoTitle()
+
+        }
+    }
+
+    private suspend fun getAllMemoTitle(): List<String> {
+        return withContext(Dispatchers.IO) {
+            database.getAlltitle()
+        }
+    }
 
     private suspend fun getMemoFromDatabase(id: Int): Memo? {
         return withContext(Dispatchers.IO) {
@@ -51,18 +70,14 @@ class HomeFragmentViewModel(val database: MemoDatabaseDao, application: Applicat
     fun onItemClick(tappedView: View, position: Int) {
         uiScope.launch {
             val mockContent = Memo(memoTitle = "mock", memoContent = "mock")
-            val memo = getMemoFromDatabase(position) ?: mockContent
+            val memo = getMemoFromDatabase(position + 1) ?: mockContent
             Log.i("HomeFragmentViewModel", "onItemClick after getFromDatabase")
-            val action = HomeFragmentDirections.actionHomeFragmentToMemoPageFragment(memo)
+            val action =
+                HomeFragmentDirections.actionHomeFragmentToMemoPageFragment(
+                    memo
+                )
             findNavController(tappedView).navigate(action)
         }
 
     }
 }
-
-//val mockContent = Memo(memoTitle = "mock", memoContent = "mock")
-//val content = getMemoFromDatabase(position)
-//
-//Log.i("HomeFragment", "Success database access")
-//val action = HomeFragmentDirections.actionHomeFragmentToMemoPageFragment(content)
-//findNavController().navigate(action)

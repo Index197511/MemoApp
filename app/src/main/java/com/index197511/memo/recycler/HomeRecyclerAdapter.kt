@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.index197511.memo.R
 
 class HomeRecyclerAdapter(
-    private val itemList: List<String>,
+    private val titleList: List<String>,
     private val itemClickListener: HomeRecyclerViewHolder.ItemClickListener
 ) : RecyclerView.Adapter<HomeRecyclerViewHolder>() {
     private var myRecyclerView: RecyclerView? = null
@@ -27,13 +27,13 @@ class HomeRecyclerAdapter(
     override fun onBindViewHolder(holder: HomeRecyclerViewHolder, position: Int) {
         Log.i("HomeRecyclerViewAdapter", "onBind")
         holder.let {
-            it.itemTextView.text = itemList.get(position)
+            it.itemTextView.text = titleList.get(position)
             it.itemImageView.setImageResource(R.mipmap.ic_launcher)
         }
     }
 
     override fun getItemCount(): Int {
-        return itemList.size
+        return titleList.size
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HomeRecyclerViewHolder {

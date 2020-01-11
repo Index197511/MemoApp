@@ -20,7 +20,11 @@ interface MemoDatabaseDao {
     @Query("SELECT * FROM memo_table ORDER BY memoId DESC")
     fun getAllMemo(): LiveData<List<Memo>>
 
+    @Query("SELECt memo_title FROM memo_table ORDER BY memoId DESC")
+    fun getAlltitle(): List<String>
+
     @Query("DELETE FROM memo_table WHERE memoId = :key")
     fun delete(key: Int)
+
 
 }

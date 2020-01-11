@@ -1,5 +1,6 @@
-package com.index197511.memo
+package com.index197511.memo.memopage
 
+//MemoPageFragmentArgs
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,8 +9,8 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.navArgs
+import com.index197511.memo.R
 import com.index197511.memo.databinding.MemoPageFragmentBinding
-import com.index197511.memo.database.Memo
 
 class MemoPageFragment : Fragment() {
 
@@ -23,7 +24,10 @@ class MemoPageFragment : Fragment() {
     ): View? {
 
         memoBinding =
-            DataBindingUtil.inflate(inflater, R.layout.memo_page_fragment, container, false)
+            DataBindingUtil.inflate(
+                inflater,
+                R.layout.memo_page_fragment, container, false
+            )
 
         val memo = args.content
         memoBinding.memoContent.text = memo.memoContent
