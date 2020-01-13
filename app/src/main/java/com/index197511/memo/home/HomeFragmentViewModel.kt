@@ -21,6 +21,10 @@ class HomeFragmentViewModel(val database: MemoDatabaseDao, application: Applicat
         get() = _allMemoTitle
 
     init {
+        runBlocking {
+            insert(Memo(memoTitle = "A", memoContent = "selected A"))
+            insert(Memo(memoTitle = "B", memoContent = "selected B"))
+        }
         initializeScreen()
     }
 

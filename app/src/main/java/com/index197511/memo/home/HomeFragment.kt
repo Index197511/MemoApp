@@ -2,12 +2,12 @@ package com.index197511.memo.home
 
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.findNavController
+import androidx.navigation.ui.NavigationUI
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.index197511.memo.R
 import com.index197511.memo.database.MemoDatabase
@@ -49,7 +49,7 @@ class HomeFragment : Fragment() {
         //recyclerView
 
         val hoges: List<String> =
-            homeFragmentViewModel.allMemoTitle.value ?: return null
+            homeFragmentViewModel.allMemoTitle.value?.reversed() ?: return null
         val recyclerView = binding.memoRecyclerView
 
         val adapter = HomeRecyclerAdapter(hoges, object : HomeRecyclerViewHolder.ItemClickListener {
@@ -64,6 +64,19 @@ class HomeFragment : Fragment() {
         setHasOptionsMenu(true)
 
         return binding.root
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater?.inflate(R.menu.main_menu, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return NavigationUI.onNavDestinationSelected(
+            item!!,
+            view!!.findNavController()
+        )
+                || super.onOptionsItemSelected(item)
     }
 
     fun onItemClick(tappedView: View, position: Int) {

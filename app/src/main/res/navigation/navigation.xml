@@ -26,5 +26,10 @@
             app:argType="com.index197511.memo.database.Memo" />
 
     </fragment>
+    <fragment
+        android:id="@+id/addMemoFragment"
+        android:name="com.index197511.memo.addmemo.AddMemoFragment"
+        android:label="add_memo_fragment"
+        tools:layout="@layout/add_memo_fragment" />
 
 </navigation>
