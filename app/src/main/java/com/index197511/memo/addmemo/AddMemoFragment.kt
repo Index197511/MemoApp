@@ -1,6 +1,7 @@
 package com.index197511.memo.addmemo
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -31,17 +32,27 @@ class AddMemoFragment : Fragment() {
                 MemoDatabase.getInstance(application).memoDatabaseDao,
                 application
             )
-        addMemoFragmentFragmentViewModel = ViewModelProviders.of(this, viewModelFactory).get(AddMemoFragmentViewModel::class.java)
+        addMemoFragmentFragmentViewModel =
+            ViewModelProviders.of(this, viewModelFactory).get(AddMemoFragmentViewModel::class.java)
         addMemoBinding.addMemoFragmentViewModel = addMemoFragmentFragmentViewModel
+        addMemoBinding.submitButton.setOnClickListener {
+            this.onSubmitButtonClick()
+        }
+
         return addMemoBinding.root
 
     }
 
-    fun insertMemoToDatabase() {
+    fun onSubmitButtonClick() {
+        this.insertMemoToDatabase()
+    }
+
+    private fun insertMemoToDatabase() {
         val newMemoTitle: String = addMemoBinding.titleText.text.toString()
         val newMemoContent = addMemoBinding.memoContentText.text.toString()
         val newMemo = Memo(memoTitle = newMemoTitle, memoContent = newMemoContent)
         addMemoFragmentFragmentViewModel.insertMemoToDatabase(newMemo)
+        Log.i("AddMemoFragment", "Added")
     }
 
 }

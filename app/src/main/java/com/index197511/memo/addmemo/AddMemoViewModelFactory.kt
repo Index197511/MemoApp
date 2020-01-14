@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.index197511.memo.database.MemoDatabaseDao
+import java.lang.IllegalArgumentException
 
 class AddMemoViewModelFactory(
     private val dataSource: MemoDatabaseDao,
@@ -17,5 +18,6 @@ class AddMemoViewModelFactory(
                 application
             ) as T
         }
+        throw IllegalArgumentException("Unknown ViewModel class")
     }
 }
