@@ -1,10 +1,6 @@
 package com.index197511.memo.database
 
-import androidx.lifecycle.LiveData
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.Query
-import androidx.room.Update
+import androidx.room.*
 
 @Dao
 interface MemoDatabaseDao {
@@ -14,17 +10,11 @@ interface MemoDatabaseDao {
     @Update
     fun update(memo: Memo)
 
-    @Query("SELECt * from memo_table WHERE memoId = :key")
-    fun get(key: Int): Memo?
-
     @Query("SELECT * FROM memo_table ORDER BY memoId DESC")
-    fun getAllMemo(): LiveData<List<Memo>>
+    fun getAllMemo(): List<Memo>
 
-    @Query("SELECt memo_title FROM memo_table ORDER BY memoId DESC")
-    fun getAlltitle(): List<String>
-
-    @Query("DELETE FROM memo_table WHERE memoId = :key")
-    fun delete(key: Int)
+    @Delete
+    fun delete(memo: Memo)
 
 
 }

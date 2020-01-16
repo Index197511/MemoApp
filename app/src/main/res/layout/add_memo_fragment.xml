@@ -23,7 +23,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
-            android:hint="memoTitle"
+            android:hint="@string/memo_title_hint"
             android:inputType="text"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -36,7 +36,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
-            android:hint="memoContent"
+            android:hint="@string/memo_content_hint"
             android:inputType="text"
             android:paddingTop="16dp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -44,13 +44,13 @@
             app:layout_constraintTop_toBottomOf="@+id/titleText" />
 
         <Button
-            android:id="@+id/submitButton"
+            android:id="@+id/addButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
-            android:text="Button"
+            android:text="@string/add_button_text"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/memoContentText" />

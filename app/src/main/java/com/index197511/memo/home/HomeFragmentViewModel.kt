@@ -4,8 +4,6 @@ import android.app.Application
 import android.util.Log
 import android.view.View
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.navigation.Navigation.findNavController
 import com.index197511.memo.database.Memo
 import com.index197511.memo.database.MemoDatabaseDao
@@ -16,35 +14,56 @@ class HomeFragmentViewModel(val database: MemoDatabaseDao, application: Applicat
 
     private var viewModelJob = Job()
     private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
-    private val _allMemoTitle = MutableLiveData<List<String>>()
-    val allMemoTitle: LiveData<List<String>>
-        get() = _allMemoTitle
+    private lateinit var allMemoList: List<Memo>
+    private val _allMemoIdAndTitleList = mutableListOf<Pair<Int, String>>()
+    val allMemoIdAndTitleList: List<Pair<Int, String>>
+        get() {
+            return _allMemoIdAndTitleList
+        }
 
     init {
+        updateMemoList()
+        Log.i("HomeFragmentViewModel", allMemoList.toString())
+        Log.i("HomeFragmentViewModel", allMemoIdAndTitleList.toString())
+    }
+
+    fun updateMemoList() {
+        setAllMemoToAllMemoList()
+        setAllMemoIdAndTitle()
+    }
+
+    private fun setAllMemoToAllMemoList() {
         runBlocking {
-            insert(Memo(memoTitle = "A", memoContent = "selected A"))
-            insert(Memo(memoTitle = "B", memoContent = "selected B"))
+            val allMemo = getAllMemoFromDatabase()
+            allMemoList = allMemo
         }
-        initializeScreen()
     }
 
-    private fun initializeScreen() {
+    private fun setAllMemoIdAndTitle() {
+        val allMemoIdAndTitleList = allMemoList
+            .map { memo -> memo.memoId to memo.memoTitle }
+
+        _allMemoIdAndTitleList.clear()
+        _allMemoIdAndTitleList += allMemoIdAndTitleList
+    }
+
+    fun deleteFromDatabase(position: Int) {
         runBlocking {
-            _allMemoTitle.value = getAllMemoTitle()
-
+            delete(allMemoList[position])
         }
+        updateMemoList()
+        Log.i("HomeFragmentViewModel delete", allMemoList.toString())
+        Log.i("HomeFragmentViewModel delete", allMemoIdAndTitleList.toString())
     }
 
-    private suspend fun getAllMemoTitle(): List<String> {
-        return withContext(Dispatchers.IO) {
-            database.getAlltitle()
-        }
-    }
-
-    private suspend fun getMemoFromDatabase(id: Int): Memo? {
-        return withContext(Dispatchers.IO) {
-            val memo = database.get(id)
-            memo
+    fun onItemClick(tappedView: View, position: Int) {
+        uiScope.launch {
+            val memo = allMemoList[position]
+            val action =
+                HomeFragmentDirections.actionHomeFragmentToMemoPageFragment(
+                    memo
+                )
+            findNavController(tappedView).navigate(action)
         }
     }
 
@@ -65,23 +84,16 @@ class HomeFragmentViewModel(val database: MemoDatabaseDao, application: Applicat
         }
     }
 
-    private suspend fun delete(id: Int) {
+    private suspend fun delete(memo: Memo) {
         withContext(Dispatchers.IO) {
-            database.delete(id)
+            database.delete(memo)
         }
     }
 
-    fun onItemClick(tappedView: View, position: Int) {
-        uiScope.launch {
-            val mockContent = Memo(memoTitle = "mock", memoContent = "mock")
-            val memo = getMemoFromDatabase(position + 1) ?: mockContent
-            Log.i("HomeFragmentViewModel", "onItemClick after getFromDatabase")
-            val action =
-                HomeFragmentDirections.actionHomeFragmentToMemoPageFragment(
-                    memo
-                )
-            findNavController(tappedView).navigate(action)
+    private suspend fun getAllMemoFromDatabase(): List<Memo> {
+        return withContext(Dispatchers.IO) {
+            database.getAllMemo()
         }
-
     }
+
 }

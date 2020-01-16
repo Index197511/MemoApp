@@ -15,6 +15,7 @@ class AddMemoFragmentViewModel(val database: MemoDatabaseDao, application: Appli
         withContext(Dispatchers.IO) {
             database.insert(memo)
         }
+
     }
 
     fun insertMemoToDatabase(memo: Memo) {

@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.findNavController
 import com.index197511.memo.R
 import com.index197511.memo.database.Memo
 import com.index197511.memo.database.MemoDatabase
@@ -35,7 +36,7 @@ class AddMemoFragment : Fragment() {
         addMemoFragmentFragmentViewModel =
             ViewModelProviders.of(this, viewModelFactory).get(AddMemoFragmentViewModel::class.java)
         addMemoBinding.addMemoFragmentViewModel = addMemoFragmentFragmentViewModel
-        addMemoBinding.submitButton.setOnClickListener {
+        addMemoBinding.addButton.setOnClickListener {
             this.onSubmitButtonClick()
         }
 
@@ -45,6 +46,7 @@ class AddMemoFragment : Fragment() {
 
     fun onSubmitButtonClick() {
         this.insertMemoToDatabase()
+        view?.findNavController()?.navigate(R.id.action_addMemoFragment_to_homeFragment)
     }
 
     private fun insertMemoToDatabase() {

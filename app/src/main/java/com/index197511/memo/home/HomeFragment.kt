@@ -1,5 +1,8 @@
 package com.index197511.memo.home
 
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.Log
 import android.view.*
@@ -8,7 +11,9 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.index197511.memo.R
 import com.index197511.memo.database.MemoDatabase
 import com.index197511.memo.databinding.HomeFragmentBinding
@@ -26,12 +31,11 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        Log.i("HomeFragment", "called onCreateView")
-
         binding = DataBindingUtil.inflate(
             inflater,
             R.layout.home_fragment, container, false
         )
+
         //database
         val application = requireNotNull(this.activity).application
         val dataSource = MemoDatabase.getInstance(application).memoDatabaseDao
@@ -41,26 +45,27 @@ class HomeFragment : Fragment() {
                 dataSource,
                 application
             )
+
         homeFragmentViewModel =
             ViewModelProviders.of(this, viewModelFactory).get(HomeFragmentViewModel::class.java)
         binding.homeFragmentViewModel = homeFragmentViewModel
         binding.lifecycleOwner = this
 
-        //recyclerView
 
-        val hoges: List<String> =
-            homeFragmentViewModel.allMemoTitle.value?.reversed() ?: return null
+        //recyclerView
         val recyclerView = binding.memoRecyclerView
 
-        val adapter = HomeRecyclerAdapter(hoges, object : HomeRecyclerViewHolder.ItemClickListener {
-            override fun onItemClick(view: View, position: Int) {
-                this@HomeFragment.onItemClick(view, position)
-            }
-        })
+        val adapter =
+            HomeRecyclerAdapter(homeFragmentViewModel.allMemoIdAndTitleList, object : HomeRecyclerViewHolder.ItemClickListener {
+                override fun onItemClick(view: View, position: Int) {
+                    this@HomeFragment.onItemClick(view, position)
+                }
+            })
 
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(activity)
-
+        val swipeToDismissTouchHelper = getSwipeToDismissTouchHelper(adapter)
+        swipeToDismissTouchHelper.attachToRecyclerView(recyclerView)
         setHasOptionsMenu(true)
 
         return binding.root
@@ -68,12 +73,12 @@ class HomeFragment : Fragment() {
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
-        inflater?.inflate(R.menu.main_menu, menu)
+        inflater.inflate(R.menu.main_menu, menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return NavigationUI.onNavDestinationSelected(
-            item!!,
+            item,
             view!!.findNavController()
         )
                 || super.onOptionsItemSelected(item)
@@ -82,6 +87,76 @@ class HomeFragment : Fragment() {
     fun onItemClick(tappedView: View, position: Int) {
         homeFragmentViewModel.onItemClick(tappedView, position)
     }
+//
+//    override fun onPause() {
+//        super.onPause()
+//        homeFragmentViewModel.updateMemoList()
+//        Log.i("HomeFragment", "onPause")
+//    }
 
+    override fun onStart() {
+        super.onStart()
+        homeFragmentViewModel.updateMemoList()
+        Log.i("HomeFragment", "onStart")
+    }
+
+    private fun getSwipeToDismissTouchHelper(adapter: RecyclerView.Adapter<HomeRecyclerViewHolder>) =
+        ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(
+            ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT,
+            ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
+        ) {
+            override fun onMove(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder
+            ): Boolean {
+                return false
+            }
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                homeFragmentViewModel.deleteFromDatabase(viewHolder.adapterPosition)
+                adapter.notifyItemRemoved(viewHolder.adapterPosition)
+                adapter.notifyDataSetChanged()
+            }
+
+            override fun onChildDraw(
+                c: Canvas,
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                dX: Float,
+                dY: Float,
+                actionState: Int,
+                isCurrentlyActive: Boolean
+            ) {
+                super.onChildDraw(
+                    c,
+                    recyclerView,
+                    viewHolder,
+                    dX,
+                    dY,
+                    actionState,
+                    isCurrentlyActive
+                )
+                val itemView = viewHolder.itemView
+                val background = ColorDrawable()
+                background.color = Color.parseColor("#f44336")
+                if (dX < 0)
+                    background.setBounds(
+                        itemView.right + dX.toInt(),
+                        itemView.top,
+                        itemView.right,
+                        itemView.bottom
+                    )
+                else
+                    background.setBounds(
+                        itemView.left,
+                        itemView.top,
+                        itemView.left + dX.toInt(),
+                        itemView.bottom
+                    )
+
+                background.draw(c)
+            }
+        })
 
 }
