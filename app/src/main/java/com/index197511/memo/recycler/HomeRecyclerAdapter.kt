@@ -5,29 +5,27 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.index197511.memo.R
+import com.index197511.memo.database.Memo
 
 class HomeRecyclerAdapter(
-    private val idAndTitleList: List<Pair<Int, String>>,
+    private val idAndTitleList: List<Memo>,
     private val itemClickListener: HomeRecyclerViewHolder.ItemClickListener
 ) : RecyclerView.Adapter<HomeRecyclerViewHolder>() {
     private var myRecyclerView: RecyclerView? = null
 
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
-        Log.i("HomeRecyclerAdapter", "onAttached")
         super.onAttachedToRecyclerView(recyclerView)
         myRecyclerView = recyclerView
     }
 
     override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
         super.onDetachedFromRecyclerView(recyclerView)
-        Log.i("HomeRecyclerAdapter", "onDetached")
         myRecyclerView = null
     }
 
     override fun onBindViewHolder(holder: HomeRecyclerViewHolder, position: Int) {
-        Log.i("HomeRecyclerViewAdapter", "onBind")
         holder.let {
-            it.itemTextView.text = idAndTitleList[position].second
+            it.itemTextView.text = idAndTitleList[position].memoTitle
             it.itemImageView.setImageResource(R.mipmap.ic_launcher)
         }
     }
@@ -45,7 +43,6 @@ class HomeRecyclerAdapter(
                 itemClickListener.onItemClick(view, it.getChildAdapterPosition(view))
             }
         }
-
         return HomeRecyclerViewHolder(myView)
     }
 

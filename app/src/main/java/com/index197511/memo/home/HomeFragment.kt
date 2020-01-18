@@ -56,11 +56,13 @@ class HomeFragment : Fragment() {
         val recyclerView = binding.memoRecyclerView
 
         val adapter =
-            HomeRecyclerAdapter(homeFragmentViewModel.allMemoIdAndTitleList, object : HomeRecyclerViewHolder.ItemClickListener {
-                override fun onItemClick(view: View, position: Int) {
-                    this@HomeFragment.onItemClick(view, position)
-                }
-            })
+            HomeRecyclerAdapter(
+                homeFragmentViewModel.allMemoList,
+                object : HomeRecyclerViewHolder.ItemClickListener {
+                    override fun onItemClick(view: View, position: Int) {
+                        this@HomeFragment.onItemClick(view, position)
+                    }
+                })
 
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(activity)
@@ -87,17 +89,10 @@ class HomeFragment : Fragment() {
     fun onItemClick(tappedView: View, position: Int) {
         homeFragmentViewModel.onItemClick(tappedView, position)
     }
-//
-//    override fun onPause() {
-//        super.onPause()
-//        homeFragmentViewModel.updateMemoList()
-//        Log.i("HomeFragment", "onPause")
-//    }
 
     override fun onStart() {
         super.onStart()
         homeFragmentViewModel.updateMemoList()
-        Log.i("HomeFragment", "onStart")
     }
 
     private fun getSwipeToDismissTouchHelper(adapter: RecyclerView.Adapter<HomeRecyclerViewHolder>) =

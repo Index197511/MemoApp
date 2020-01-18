@@ -54,7 +54,6 @@ class AddMemoFragment : Fragment() {
         val newMemoContent = addMemoBinding.memoContentText.text.toString()
         val newMemo = Memo(memoTitle = newMemoTitle, memoContent = newMemoContent)
         addMemoFragmentFragmentViewModel.insertMemoToDatabase(newMemo)
-        Log.i("AddMemoFragment", "Added")
     }
 
 }

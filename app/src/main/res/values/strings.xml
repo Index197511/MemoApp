@@ -6,4 +6,5 @@
     <string name="memo_title_hint">Title</string>
     <string name="memo_content_hint">Content</string>
     <string name="add_button_text">Add</string>
+    <string name="add_menu_button_text">add</string>
 </resources>

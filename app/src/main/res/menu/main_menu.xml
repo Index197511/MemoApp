@@ -3,5 +3,5 @@
 
     <item
         android:id="@+id/addMemoFragment"
-        android:title="Item" />
+        android:title="@string/add_menu_button_text" />
 </menu>

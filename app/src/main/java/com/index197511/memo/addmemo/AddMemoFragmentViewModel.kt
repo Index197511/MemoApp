@@ -19,7 +19,7 @@ class AddMemoFragmentViewModel(val database: MemoDatabaseDao, application: Appli
     }
 
     fun insertMemoToDatabase(memo: Memo) {
-        uiScope.launch {
+        runBlocking {
             insert(memo)
         }
     }

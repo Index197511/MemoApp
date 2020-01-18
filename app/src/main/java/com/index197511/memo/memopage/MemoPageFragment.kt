@@ -31,16 +31,13 @@ class MemoPageFragment : Fragment() {
 
         val memo = args.content
         memoBinding.memoContent.text = memo.memoContent
-
-
-
+        
         return memoBinding.root
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProviders.of(this).get(MemoPageViewModel::class.java)
-        // TODO: Use the ViewModel
     }
 
 
