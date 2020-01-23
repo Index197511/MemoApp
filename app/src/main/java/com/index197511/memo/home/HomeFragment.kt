@@ -4,7 +4,6 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -48,13 +47,13 @@ class HomeFragment : Fragment() {
 
         homeFragmentViewModel =
             ViewModelProviders.of(this, viewModelFactory).get(HomeFragmentViewModel::class.java)
-        binding.homeFragmentViewModel = homeFragmentViewModel
-        binding.lifecycleOwner = this
 
+        binding.also {
+            it.homeFragmentViewModel = homeFragmentViewModel
+            it.lifecycleOwner = this
+        }
 
         //recyclerView
-        val recyclerView = binding.memoRecyclerView
-
         val adapter =
             HomeRecyclerAdapter(
                 homeFragmentViewModel.allMemoList,
@@ -64,8 +63,11 @@ class HomeFragment : Fragment() {
                     }
                 })
 
-        recyclerView.adapter = adapter
-        recyclerView.layoutManager = LinearLayoutManager(activity)
+        val recyclerView = binding.memoRecyclerView.also {
+            it.adapter = adapter
+            it.layoutManager = LinearLayoutManager(activity)
+        }
+
         val swipeToDismissTouchHelper = getSwipeToDismissTouchHelper(adapter)
         swipeToDismissTouchHelper.attachToRecyclerView(recyclerView)
         setHasOptionsMenu(true)
@@ -75,7 +77,7 @@ class HomeFragment : Fragment() {
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
-        inflater.inflate(R.menu.main_menu, menu)
+        inflater.inflate(R.menu.add_button, menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -110,8 +112,11 @@ class HomeFragment : Fragment() {
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 homeFragmentViewModel.deleteFromDatabase(viewHolder.adapterPosition)
-                adapter.notifyItemRemoved(viewHolder.adapterPosition)
-                adapter.notifyDataSetChanged()
+
+                adapter.also {
+                    it.notifyItemRemoved(viewHolder.adapterPosition)
+                    it.notifyDataSetChanged()
+                }
             }
 
             override fun onChildDraw(

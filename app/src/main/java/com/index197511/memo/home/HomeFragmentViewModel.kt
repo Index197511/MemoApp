@@ -1,7 +1,6 @@
 package com.index197511.memo.home
 
 import android.app.Application
-import android.util.Log
 import android.view.View
 import androidx.lifecycle.AndroidViewModel
 import androidx.navigation.Navigation.findNavController
@@ -32,9 +31,10 @@ class HomeFragmentViewModel(val database: MemoDatabaseDao, application: Applicat
 
     private fun setAllMemoToAllMemoList() {
         runBlocking {
-            val allMemo = getAllMemoFromDatabase()
-            _allMemoList.clear()
-            _allMemoList += (allMemo)
+            _allMemoList.also {
+                it.clear()
+                it += getAllMemoFromDatabase()
+            }
         }
     }
 

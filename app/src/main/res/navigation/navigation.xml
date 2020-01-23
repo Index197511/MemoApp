@@ -24,6 +24,9 @@
         <argument
             android:name="content"
             app:argType="com.index197511.memo.database.Memo" />
+        <action
+            android:id="@+id/action_memoPageFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
 
     </fragment>
     <fragment

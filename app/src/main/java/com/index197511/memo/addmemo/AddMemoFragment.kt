@@ -1,18 +1,18 @@
 package com.index197511.memo.addmemo
 
+import android.content.Context
 import android.os.Bundle
-import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
+import androidx.navigation.ui.NavigationUI
 import com.index197511.memo.R
 import com.index197511.memo.database.Memo
 import com.index197511.memo.database.MemoDatabase
 import com.index197511.memo.databinding.AddMemoFragmentBinding
+import android.view.inputmethod.InputMethodManager
 
 class AddMemoFragment : Fragment() {
 
@@ -36,18 +36,29 @@ class AddMemoFragment : Fragment() {
         addMemoFragmentFragmentViewModel =
             ViewModelProviders.of(this, viewModelFactory).get(AddMemoFragmentViewModel::class.java)
         addMemoBinding.addMemoFragmentViewModel = addMemoFragmentFragmentViewModel
-        addMemoBinding.addButton.setOnClickListener {
-            this.onSubmitButtonClick()
-        }
+
+        setHasOptionsMenu(true)
 
         return addMemoBinding.root
 
     }
 
-    fun onSubmitButtonClick() {
-        this.insertMemoToDatabase()
-        view?.findNavController()?.navigate(R.id.action_addMemoFragment_to_homeFragment)
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.save_button, menu)
     }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        this.insertMemoToDatabase()
+        val inputMethodManager = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.hideSoftInputFromWindow(view!!.windowToken, 0)
+        return NavigationUI.onNavDestinationSelected(
+            item,
+            view!!.findNavController()
+        )
+                || super.onOptionsItemSelected(item)
+    }
+
 
     private fun insertMemoToDatabase() {
         val newMemoTitle: String = addMemoBinding.titleText.text.toString()
