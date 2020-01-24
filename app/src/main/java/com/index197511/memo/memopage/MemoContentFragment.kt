@@ -1,10 +1,8 @@
 package com.index197511.memo.memopage
 
 //MemoPageFragmentArgs
-import android.content.Context
 import android.os.Bundle
 import android.view.*
-import android.view.inputmethod.InputMethodManager
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
@@ -15,6 +13,7 @@ import com.index197511.memo.R
 import com.index197511.memo.database.Memo
 import com.index197511.memo.database.MemoDatabase
 import com.index197511.memo.databinding.MemoPageFragmentBinding
+import com.index197511.memo.ext.closeKeyboard
 
 class MemoContentFragment : Fragment() {
 
@@ -76,12 +75,6 @@ class MemoContentFragment : Fragment() {
             view!!.findNavController()
         )
                 || super.onOptionsItemSelected(item)
-    }
-
-    private fun closeKeyboard() {
-        val inputMethodManager =
-            activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        inputMethodManager.hideSoftInputFromWindow(view!!.windowToken, 0)
     }
 
 }

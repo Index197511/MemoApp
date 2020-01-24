@@ -1,9 +1,7 @@
 package com.index197511.memo.addmemo
 
-import android.content.Context
 import android.os.Bundle
 import android.view.*
-import android.view.inputmethod.InputMethodManager
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
@@ -13,6 +11,7 @@ import com.index197511.memo.R
 import com.index197511.memo.database.Memo
 import com.index197511.memo.database.MemoDatabase
 import com.index197511.memo.databinding.AddMemoFragmentBinding
+import com.index197511.memo.ext.closeKeyboard
 
 class AddMemoFragment : Fragment() {
 
@@ -48,8 +47,8 @@ class AddMemoFragment : Fragment() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        this.insertMemoToDatabase()
-        this.closeKeyboard()
+        insertMemoToDatabase()
+        closeKeyboard()
 
         return NavigationUI.onNavDestinationSelected(
             item,
@@ -67,9 +66,4 @@ class AddMemoFragment : Fragment() {
         addMemoFragmentViewModel.insertMemoToDatabase(newMemo)
     }
 
-    private fun closeKeyboard() {
-        val inputMethodManager =
-            activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        inputMethodManager.hideSoftInputFromWindow(view!!.windowToken, 0)
-    }
 }
