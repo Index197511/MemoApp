@@ -47,9 +47,9 @@ class MemoContentFragment : Fragment() {
             ViewModelProviders.of(this, viewModelFactory)
                 .get(MemoContentFragmentViewModel::class.java)
 
-        memoBinding.also {
-            it.memoTitleView.setText(sentMemo.memoTitle)
-            it.memoContentView.setText(sentMemo.memoContent)
+        memoBinding.apply {
+            memoTitleView.setText(sentMemo.memoTitle)
+            memoContentView.setText(sentMemo.memoContent)
         }
 
         setHasOptionsMenu(true)
@@ -63,9 +63,9 @@ class MemoContentFragment : Fragment() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
 
-        sentMemo.also {
-            it.memoTitle = memoBinding.memoTitleView.text.toString()
-            it.memoContent = memoBinding.memoContentView.text.toString()
+        sentMemo.apply {
+            memoTitle = memoBinding.memoTitleView.text.toString()
+            memoContent = memoBinding.memoContentView.text.toString()
         }
 
         memoContentFragmentViewModel.reflectMemoChange(sentMemo)
