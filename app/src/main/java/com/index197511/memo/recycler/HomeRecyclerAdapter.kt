@@ -11,6 +11,7 @@ class HomeRecyclerAdapter(
     private val idAndTitleList: List<Memo>,
     private val itemClickListener: HomeRecyclerViewHolder.ItemClickListener
 ) : RecyclerView.Adapter<HomeRecyclerViewHolder>() {
+
     private var myRecyclerView: RecyclerView? = null
 
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {

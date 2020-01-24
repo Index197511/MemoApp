@@ -22,11 +22,11 @@ class MemoContentFragment : Fragment() {
     private lateinit var memoBinding: MemoPageFragmentBinding
     private lateinit var memoContentFragmentViewModel: MemoContentFragmentViewModel
     private lateinit var sentMemo: Memo
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
         memoBinding =
             DataBindingUtil.inflate(
                 inflater,
@@ -76,7 +76,6 @@ class MemoContentFragment : Fragment() {
             view!!.findNavController()
         )
                 || super.onOptionsItemSelected(item)
-
     }
 
     private fun closeKeyboard() {
@@ -84,4 +83,5 @@ class MemoContentFragment : Fragment() {
             activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         inputMethodManager.hideSoftInputFromWindow(view!!.windowToken, 0)
     }
+
 }

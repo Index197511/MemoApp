@@ -4,6 +4,7 @@ import androidx.room.*
 
 @Dao
 interface MemoDatabaseDao {
+
     @Insert
     fun insert(memo: Memo)
 
@@ -15,6 +16,5 @@ interface MemoDatabaseDao {
 
     @Delete
     fun delete(memo: Memo)
-
 
 }

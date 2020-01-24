@@ -9,8 +9,8 @@ import kotlinx.coroutines.*
 class MemoContentFragmentViewModel(
     val database: MemoDatabaseDao,
     application: Application
-) :
-    AndroidViewModel(application) {
+) : AndroidViewModel(application) {
+
     private var viewModelJob = Job()
     private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
 

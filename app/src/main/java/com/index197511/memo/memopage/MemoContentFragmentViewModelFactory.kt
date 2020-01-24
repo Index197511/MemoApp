@@ -9,6 +9,7 @@ class MemoContentFragmentViewModelFactory(
     private val dataSource: MemoDatabaseDao,
     private val application: Application
 ) : ViewModelProvider.Factory {
+
     @Suppress("unchecked_cast")
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(MemoContentFragmentViewModel::class.java)) {
@@ -19,4 +20,5 @@ class MemoContentFragmentViewModelFactory(
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }
+
 }
