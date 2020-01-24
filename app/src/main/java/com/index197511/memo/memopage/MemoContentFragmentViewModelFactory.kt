@@ -5,14 +5,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.index197511.memo.database.MemoDatabaseDao
 
-class MemoPageFragmentViewModelFactory(
+class MemoContentFragmentViewModelFactory(
     private val dataSource: MemoDatabaseDao,
     private val application: Application
 ) : ViewModelProvider.Factory {
     @Suppress("unchecked_cast")
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(MemoPageFragmentViewModel::class.java)) {
-            return MemoPageFragmentViewModel(
+        if (modelClass.isAssignableFrom(MemoContentFragmentViewModel::class.java)) {
+            return MemoContentFragmentViewModel(
                 dataSource,
                 application
             ) as T

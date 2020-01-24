@@ -4,6 +4,7 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -29,7 +30,6 @@ class HomeFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
         binding = DataBindingUtil.inflate(
             inflater,
             R.layout.home_fragment, container, false
@@ -48,10 +48,7 @@ class HomeFragment : Fragment() {
         homeFragmentViewModel =
             ViewModelProviders.of(this, viewModelFactory).get(HomeFragmentViewModel::class.java)
 
-        binding.also {
-            it.homeFragmentViewModel = homeFragmentViewModel
-            it.lifecycleOwner = this
-        }
+        binding.lifecycleOwner = this
 
         //recyclerView
         val adapter =

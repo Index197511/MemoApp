@@ -16,11 +16,11 @@ import com.index197511.memo.database.Memo
 import com.index197511.memo.database.MemoDatabase
 import com.index197511.memo.databinding.MemoPageFragmentBinding
 
-class MemoPageFragment : Fragment() {
+class MemoContentFragment : Fragment() {
 
-    private val args: MemoPageFragmentArgs by navArgs()
+    private val args: MemoContentFragmentArgs by navArgs()
     private lateinit var memoBinding: MemoPageFragmentBinding
-    private lateinit var memoPageFragmentViewModel: MemoPageFragmentViewModel
+    private lateinit var memoContentFragmentViewModel: MemoContentFragmentViewModel
     private lateinit var sentMemo: Memo
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -38,13 +38,14 @@ class MemoPageFragment : Fragment() {
         sentMemo = args.content
 
         val viewModelFactory =
-            MemoPageFragmentViewModelFactory(
+            MemoContentFragmentViewModelFactory(
                 dataSource,
                 application
             )
 
-        memoPageFragmentViewModel =
-            ViewModelProviders.of(this, viewModelFactory).get(MemoPageFragmentViewModel::class.java)
+        memoContentFragmentViewModel =
+            ViewModelProviders.of(this, viewModelFactory)
+                .get(MemoContentFragmentViewModel::class.java)
 
         memoBinding.also {
             it.memoTitleView.setText(sentMemo.memoTitle)
@@ -61,14 +62,14 @@ class MemoPageFragment : Fragment() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
+
         sentMemo.also {
             it.memoTitle = memoBinding.memoTitleView.text.toString()
             it.memoContent = memoBinding.memoContentView.text.toString()
         }
-        memoPageFragmentViewModel.reflectMemoChange(sentMemo)
-        val inputMethodManager =
-            activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        inputMethodManager.hideSoftInputFromWindow(view!!.windowToken, 0)
+
+        memoContentFragmentViewModel.reflectMemoChange(sentMemo)
+        closeKeyboard()
 
         return NavigationUI.onNavDestinationSelected(
             item,
@@ -76,5 +77,11 @@ class MemoPageFragment : Fragment() {
         )
                 || super.onOptionsItemSelected(item)
 
+    }
+
+    private fun closeKeyboard() {
+        val inputMethodManager =
+            activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.hideSoftInputFromWindow(view!!.windowToken, 0)
     }
 }

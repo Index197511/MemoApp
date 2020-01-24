@@ -6,7 +6,7 @@ import com.index197511.memo.database.Memo
 import com.index197511.memo.database.MemoDatabaseDao
 import kotlinx.coroutines.*
 
-class MemoPageFragmentViewModel(
+class MemoContentFragmentViewModel(
     val database: MemoDatabaseDao,
     application: Application
 ) :

@@ -10,7 +10,7 @@ class AddMemoViewModelFactory(
     private val dataSource: MemoDatabaseDao,
     private val application: Application
 ) : ViewModelProvider.Factory {
-    @Suppress("unchecked cast")
+    @Suppress("unchecked_cast")
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(AddMemoFragmentViewModel::class.java)) {
             return AddMemoFragmentViewModel(

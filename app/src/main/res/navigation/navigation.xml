@@ -17,7 +17,7 @@
     </fragment>
     <fragment
         android:id="@+id/memoPageFragment"
-        android:name="com.index197511.memo.memopage.MemoPageFragment"
+        android:name="com.index197511.memo.memopage.MemoContentFragment"
         android:label="memo_page_fragment"
         tools:layout="@layout/memo_page_fragment">
 
@@ -26,17 +26,19 @@
             app:argType="com.index197511.memo.database.Memo" />
         <action
             android:id="@+id/action_memoPageFragment_to_homeFragment"
-            app:destination="@id/homeFragment" />
+            app:destination="@id/homeFragment"
+            app:exitAnim="@anim/slide_to_right" />
 
     </fragment>
     <fragment
         android:id="@+id/addMemoFragment"
         android:name="com.index197511.memo.addmemo.AddMemoFragment"
         android:label="add_memo_fragment"
-        tools:layout="@layout/add_memo_fragment" >
+        tools:layout="@layout/add_memo_fragment">
         <action
             android:id="@+id/action_addMemoFragment_to_homeFragment"
-            app:destination="@id/homeFragment" />
+            app:destination="@id/homeFragment"
+            app:exitAnim="@anim/slide_to_right" />
     </fragment>
 
 </navigation>

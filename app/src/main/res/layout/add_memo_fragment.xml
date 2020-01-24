@@ -5,13 +5,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".addmemo.AddMemoFragment">
 
-    <data>
-
-        <variable
-            name="addMemoFragmentViewModel"
-            type="com.index197511.memo.addmemo.AddMemoFragmentViewModel" />
-    </data>
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -26,6 +19,7 @@
             android:ems="10"
             android:gravity="center"
             android:hint="@string/memo_title_hint"
+            android:importantForAutofill="no"
             android:inputType="text"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -38,9 +32,10 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
-            android:gravity="clip_vertical"
             android:ems="10"
+            android:gravity="clip_vertical"
             android:hint="@string/memo_content_hint"
+            android:importantForAutofill="no"
             android:inputType="textMultiLine|textPersonName|textImeMultiLine"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

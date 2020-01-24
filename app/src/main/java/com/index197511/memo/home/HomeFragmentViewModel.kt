@@ -1,6 +1,7 @@
 package com.index197511.memo.home
 
 import android.app.Application
+import android.util.Log
 import android.view.View
 import androidx.lifecycle.AndroidViewModel
 import androidx.navigation.Navigation.findNavController
@@ -20,10 +21,6 @@ class HomeFragmentViewModel(val database: MemoDatabaseDao, application: Applicat
         get() {
             return _allMemoList
         }
-
-    init {
-        updateMemoList()
-    }
 
     fun updateMemoList() {
         setAllMemoToAllMemoList()
