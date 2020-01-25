@@ -14,10 +14,10 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.index197511.memo.R
-import com.index197511.memo.database.MemoDatabase
 import com.index197511.memo.databinding.HomeFragmentBinding
 import com.index197511.memo.recycler.HomeRecyclerAdapter
 import com.index197511.memo.recycler.HomeRecyclerViewHolder
+import com.index197511.memo.repository.MemoRepository
 
 
 class HomeFragment : Fragment() {
@@ -34,14 +34,13 @@ class HomeFragment : Fragment() {
             R.layout.home_fragment, container, false
         )
 
-        //database
         val application = requireNotNull(this.activity).application
-        val dataSource = MemoDatabase.getInstance(application).memoDatabaseDao
+        val memoRepository = MemoRepository(application)
 
         val viewModelFactory =
             HomeFragmentViewModelFactory(
-                dataSource,
-                application
+                application,
+                memoRepository
             )
 
         homeFragmentViewModel =
@@ -80,6 +79,10 @@ class HomeFragment : Fragment() {
     override fun onStart() {
         super.onStart()
         homeFragmentViewModel.updateMemoList()
+    }
+
+    private fun onItemClick(tappedView: View, position: Int) {
+        homeFragmentViewModel.onItemClick(tappedView, position)
     }
 
     private fun getSwipeToDismissTouchHelper(adapter: RecyclerView.Adapter<HomeRecyclerViewHolder>) =
@@ -143,9 +146,5 @@ class HomeFragment : Fragment() {
                 background.draw(c)
             }
         })
-
-    private fun onItemClick(tappedView: View, position: Int) {
-        homeFragmentViewModel.onItemClick(tappedView, position)
-    }
 
 }

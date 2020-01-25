@@ -11,9 +11,9 @@ import androidx.navigation.fragment.navArgs
 import androidx.navigation.ui.NavigationUI
 import com.index197511.memo.R
 import com.index197511.memo.database.Memo
-import com.index197511.memo.database.MemoDatabase
 import com.index197511.memo.databinding.MemoPageFragmentBinding
 import com.index197511.memo.ext.closeKeyboard
+import com.index197511.memo.repository.MemoRepository
 
 class MemoContentFragment : Fragment() {
 
@@ -33,13 +33,13 @@ class MemoContentFragment : Fragment() {
             )
 
         val application = requireNotNull(this.activity).application
-        val dataSource = MemoDatabase.getInstance(application).memoDatabaseDao
+        val memoRepository = MemoRepository(application)
         sentMemo = args.content
 
         val viewModelFactory =
             MemoContentFragmentViewModelFactory(
-                dataSource,
-                application
+                application,
+                memoRepository
             )
 
         memoContentFragmentViewModel =

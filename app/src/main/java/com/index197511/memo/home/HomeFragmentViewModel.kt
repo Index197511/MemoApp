@@ -5,16 +5,11 @@ import android.view.View
 import androidx.lifecycle.AndroidViewModel
 import androidx.navigation.Navigation.findNavController
 import com.index197511.memo.database.Memo
-import com.index197511.memo.database.MemoDatabaseDao
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
+import com.index197511.memo.repository.MemoRepository
 import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.withContext
 
-class HomeFragmentViewModel(val database: MemoDatabaseDao, application: Application) :
+class HomeFragmentViewModel(application: Application, val memoRepository: MemoRepository) :
     AndroidViewModel(application) {
-
-    private var viewModelJob = Job()
     private val _allMemoList: MutableList<Memo> = mutableListOf()
     val allMemoList: List<Memo>
         get() {
@@ -25,13 +20,11 @@ class HomeFragmentViewModel(val database: MemoDatabaseDao, application: Applicat
         setAllMemoToAllMemoList()
     }
 
-    private fun setAllMemoToAllMemoList() {
+    fun deleteFromDatabase(position: Int) {
         runBlocking {
-            _allMemoList.apply {
-                clear()
-                addAll(getAllMemoFromDatabase())
-            }
+            memoRepository.delete(allMemoList[position])
         }
+        updateMemoList()
     }
 
     fun onItemClick(tappedView: View, position: Int) {
@@ -42,28 +35,12 @@ class HomeFragmentViewModel(val database: MemoDatabaseDao, application: Applicat
         findNavController(tappedView).navigate(action)
     }
 
-    override fun onCleared() {
-        super.onCleared()
-        viewModelJob.cancel()
-    }
-
-    fun deleteFromDatabase(position: Int) {
+    private fun setAllMemoToAllMemoList() {
         runBlocking {
-            delete(allMemoList[position])
-        }
-        updateMemoList()
-    }
-
-    private suspend fun delete(memo: Memo) {
-        withContext(Dispatchers.IO) {
-            database.delete(memo)
+            _allMemoList.apply {
+                clear()
+                addAll(memoRepository.getAllMemoFromDatabase())
+            }
         }
     }
-
-    private suspend fun getAllMemoFromDatabase(): List<Memo> {
-        return withContext(Dispatchers.IO) {
-            database.getAllMemo()
-        }
-    }
-
 }

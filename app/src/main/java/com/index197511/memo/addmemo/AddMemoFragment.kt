@@ -9,9 +9,9 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI
 import com.index197511.memo.R
 import com.index197511.memo.database.Memo
-import com.index197511.memo.database.MemoDatabase
 import com.index197511.memo.databinding.AddMemoFragmentBinding
 import com.index197511.memo.ext.closeKeyboard
+import com.index197511.memo.repository.MemoRepository
 
 class AddMemoFragment : Fragment() {
 
@@ -26,12 +26,14 @@ class AddMemoFragment : Fragment() {
         addMemoBinding =
             DataBindingUtil.inflate(inflater, R.layout.add_memo_fragment, container, false)
         val application = requireNotNull(this.activity).application
+        val memoRepository = MemoRepository(application)
 
         val viewModelFactory =
             AddMemoViewModelFactory(
-                MemoDatabase.getInstance(application).memoDatabaseDao,
-                application
+                application,
+                memoRepository
             )
+
         addMemoFragmentViewModel =
             ViewModelProviders.of(this, viewModelFactory).get(AddMemoFragmentViewModel::class.java)
 
