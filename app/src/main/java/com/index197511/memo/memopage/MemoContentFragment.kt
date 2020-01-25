@@ -1,10 +1,8 @@
 package com.index197511.memo.memopage
 
 //MemoPageFragmentArgs
-import android.content.Context
 import android.os.Bundle
 import android.view.*
-import android.view.inputmethod.InputMethodManager
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
@@ -15,6 +13,7 @@ import com.index197511.memo.R
 import com.index197511.memo.database.Memo
 import com.index197511.memo.database.MemoDatabase
 import com.index197511.memo.databinding.MemoPageFragmentBinding
+import com.index197511.memo.ext.closeKeyboard
 
 class MemoContentFragment : Fragment() {
 
@@ -22,11 +21,11 @@ class MemoContentFragment : Fragment() {
     private lateinit var memoBinding: MemoPageFragmentBinding
     private lateinit var memoContentFragmentViewModel: MemoContentFragmentViewModel
     private lateinit var sentMemo: Memo
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
         memoBinding =
             DataBindingUtil.inflate(
                 inflater,
@@ -47,9 +46,9 @@ class MemoContentFragment : Fragment() {
             ViewModelProviders.of(this, viewModelFactory)
                 .get(MemoContentFragmentViewModel::class.java)
 
-        memoBinding.also {
-            it.memoTitleView.setText(sentMemo.memoTitle)
-            it.memoContentView.setText(sentMemo.memoContent)
+        memoBinding.apply {
+            memoTitleView.setText(sentMemo.memoTitle)
+            memoContentView.setText(sentMemo.memoContent)
         }
 
         setHasOptionsMenu(true)
@@ -63,9 +62,9 @@ class MemoContentFragment : Fragment() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
 
-        sentMemo.also {
-            it.memoTitle = memoBinding.memoTitleView.text.toString()
-            it.memoContent = memoBinding.memoContentView.text.toString()
+        sentMemo.apply {
+            memoTitle = memoBinding.memoTitleView.text.toString()
+            memoContent = memoBinding.memoContentView.text.toString()
         }
 
         memoContentFragmentViewModel.reflectMemoChange(sentMemo)
@@ -76,12 +75,6 @@ class MemoContentFragment : Fragment() {
             view!!.findNavController()
         )
                 || super.onOptionsItemSelected(item)
-
     }
 
-    private fun closeKeyboard() {
-        val inputMethodManager =
-            activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        inputMethodManager.hideSoftInputFromWindow(view!!.windowToken, 0)
-    }
 }

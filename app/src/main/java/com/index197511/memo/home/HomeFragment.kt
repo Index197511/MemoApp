@@ -4,7 +4,6 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -51,21 +50,15 @@ class HomeFragment : Fragment() {
         binding.lifecycleOwner = this
 
         //recyclerView
-        val adapter =
-            HomeRecyclerAdapter(
-                homeFragmentViewModel.allMemoList,
-                object : HomeRecyclerViewHolder.ItemClickListener {
-                    override fun onItemClick(view: View, position: Int) {
-                        this@HomeFragment.onItemClick(view, position)
-                    }
-                })
+        val homeRecylcerAdapter =
+            HomeRecyclerAdapter(homeFragmentViewModel.allMemoList, this@HomeFragment::onItemClick)
 
-        val recyclerView = binding.memoRecyclerView.also {
-            it.adapter = adapter
-            it.layoutManager = LinearLayoutManager(activity)
+        val recyclerView = binding.memoRecyclerView.apply {
+            adapter = homeRecylcerAdapter
+            layoutManager = LinearLayoutManager(activity)
         }
 
-        val swipeToDismissTouchHelper = getSwipeToDismissTouchHelper(adapter)
+        val swipeToDismissTouchHelper = getSwipeToDismissTouchHelper(homeRecylcerAdapter)
         swipeToDismissTouchHelper.attachToRecyclerView(recyclerView)
         setHasOptionsMenu(true)
 
@@ -81,12 +74,7 @@ class HomeFragment : Fragment() {
         return NavigationUI.onNavDestinationSelected(
             item,
             view!!.findNavController()
-        )
-                || super.onOptionsItemSelected(item)
-    }
-
-    fun onItemClick(tappedView: View, position: Int) {
-        homeFragmentViewModel.onItemClick(tappedView, position)
+        ) || super.onOptionsItemSelected(item)
     }
 
     override fun onStart() {
@@ -110,9 +98,9 @@ class HomeFragment : Fragment() {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 homeFragmentViewModel.deleteFromDatabase(viewHolder.adapterPosition)
 
-                adapter.also {
-                    it.notifyItemRemoved(viewHolder.adapterPosition)
-                    it.notifyDataSetChanged()
+                adapter.apply {
+                    notifyItemRemoved(viewHolder.adapterPosition)
+                    notifyDataSetChanged()
                 }
             }
 
@@ -155,5 +143,9 @@ class HomeFragment : Fragment() {
                 background.draw(c)
             }
         })
+
+    private fun onItemClick(tappedView: View, position: Int) {
+        homeFragmentViewModel.onItemClick(tappedView, position)
+    }
 
 }
