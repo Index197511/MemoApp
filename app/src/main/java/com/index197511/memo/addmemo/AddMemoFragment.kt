@@ -26,7 +26,7 @@ class AddMemoFragment : Fragment() {
         addMemoBinding =
             DataBindingUtil.inflate(inflater, R.layout.add_memo_fragment, container, false)
         val application = requireNotNull(this.activity).application
-        val memoRepository = MemoRepository(application)
+        val memoRepository = MemoRepository.getInstance(application)
 
         val viewModelFactory =
             AddMemoViewModelFactory(

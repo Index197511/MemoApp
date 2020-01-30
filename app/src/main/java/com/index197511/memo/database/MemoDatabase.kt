@@ -10,26 +10,20 @@ abstract class MemoDatabase : RoomDatabase() {
     abstract val memoDatabaseDao: MemoDatabaseDao
 
     companion object {
-        @Volatile
         private var INSTANCE: MemoDatabase? = null
 
-        fun getInstance(context: Context): MemoDatabase {
-            synchronized(this) {
-                var instance = INSTANCE
-
-                if (instance == null) {
-                    instance = Room.databaseBuilder(
-                        context.applicationContext,
-                        MemoDatabase::class.java,
-                        "memo_content_database"
-                    )
-                        .fallbackToDestructiveMigration()
-                        .build()
-                    INSTANCE = instance
+        fun getInstance(context: Context) = INSTANCE ?: synchronized(this) {
+            INSTANCE ?: Room.databaseBuilder(
+                context.applicationContext,
+                MemoDatabase::class.java,
+                "memo_content_database"
+            )
+                .fallbackToDestructiveMigration()
+                .build()
+                .also {
+                    INSTANCE = it
                 }
-
-                return instance
-            }
         }
     }
+
 }

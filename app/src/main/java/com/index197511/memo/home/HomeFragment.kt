@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.view.*
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI
@@ -33,9 +34,10 @@ class HomeFragment : Fragment() {
             inflater,
             R.layout.home_fragment, container, false
         )
+        binding.lifecycleOwner = this
 
         val application = requireNotNull(this.activity).application
-        val memoRepository = MemoRepository(application)
+        val memoRepository = MemoRepository.getInstance(application)
 
         val viewModelFactory =
             HomeFragmentViewModelFactory(
@@ -46,19 +48,21 @@ class HomeFragment : Fragment() {
         homeFragmentViewModel =
             ViewModelProviders.of(this, viewModelFactory).get(HomeFragmentViewModel::class.java)
 
-        binding.lifecycleOwner = this
-
         //recyclerView
-        val homeRecylcerAdapter =
-            HomeRecyclerAdapter(homeFragmentViewModel.allMemoList, this@HomeFragment::onItemClick)
+        val homeRecyclerAdapter =
+            HomeRecyclerAdapter(this@HomeFragment::onItemClick)
 
         val recyclerView = binding.memoRecyclerView.apply {
-            adapter = homeRecylcerAdapter
+            adapter = homeRecyclerAdapter
             layoutManager = LinearLayoutManager(activity)
         }
 
-        val swipeToDismissTouchHelper = getSwipeToDismissTouchHelper(homeRecylcerAdapter)
-        swipeToDismissTouchHelper.attachToRecyclerView(recyclerView)
+        homeFragmentViewModel.allMemoList.observe(this, Observer { memos ->
+            memos?.also { homeRecyclerAdapter.setMemos(it) }
+        })
+
+        getSwipeToDismissTouchHelper(homeRecyclerAdapter)
+            .attachToRecyclerView(recyclerView)
         setHasOptionsMenu(true)
 
         return binding.root
@@ -70,15 +74,9 @@ class HomeFragment : Fragment() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return NavigationUI.onNavDestinationSelected(
-            item,
-            view!!.findNavController()
-        ) || super.onOptionsItemSelected(item)
-    }
-
-    override fun onStart() {
-        super.onStart()
-        homeFragmentViewModel.updateMemoList()
+        return view?.let { view ->
+            NavigationUI.onNavDestinationSelected(item, view.findNavController())
+        } ?: super.onOptionsItemSelected(item)
     }
 
     private fun onItemClick(tappedView: View, position: Int) {

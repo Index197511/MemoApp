@@ -13,7 +13,7 @@ class MemoContentFragmentViewModel(
     private val memoRepository: MemoRepository
 ) : AndroidViewModel(application) {
 
-    fun reflectMemoChange(memo: Memo) {
+    fun updateMemo(memo: Memo) {
         viewModelScope.launch {
             memoRepository.update(memo)
         }

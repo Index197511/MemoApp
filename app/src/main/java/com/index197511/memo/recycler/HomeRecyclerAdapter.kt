@@ -9,11 +9,12 @@ import com.index197511.memo.R
 import com.index197511.memo.database.Memo
 
 class HomeRecyclerAdapter(
-    private val idAndTitleList: List<Memo>,
+//    private val memoList: List<Memo>,
     private val onItemClick: (view: View, position: Int) -> Unit
 ) : RecyclerView.Adapter<HomeRecyclerViewHolder>() {
 
     private lateinit var recyclerView: RecyclerView
+    private var memos = emptyList<Memo>()
 
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
         super.onAttachedToRecyclerView(recyclerView)
@@ -23,12 +24,18 @@ class HomeRecyclerAdapter(
 
     override fun onBindViewHolder(holder: HomeRecyclerViewHolder, position: Int) {
         holder.apply {
-            itemTextView.text = idAndTitleList[position].memoTitle
+            itemTextView.text = memos[position].memoTitle
             itemImageView.setImageResource(R.mipmap.ic_launcher)
         }
     }
 
-    override fun getItemCount(): Int = idAndTitleList.size
+    fun setMemos(memos: List<Memo>) {
+        this.memos = memos
+        notifyDataSetChanged()
+    }
+
+
+    override fun getItemCount(): Int = memos.size
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HomeRecyclerViewHolder {
         Log.i("Adapter", "onCreateViewHolder")

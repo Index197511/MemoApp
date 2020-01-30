@@ -26,6 +26,7 @@ class MemoContentFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        sentMemo = args.content
         memoBinding =
             DataBindingUtil.inflate(
                 inflater,
@@ -33,8 +34,7 @@ class MemoContentFragment : Fragment() {
             )
 
         val application = requireNotNull(this.activity).application
-        val memoRepository = MemoRepository(application)
-        sentMemo = args.content
+        val memoRepository = MemoRepository.getInstance(application)
 
         val viewModelFactory =
             MemoContentFragmentViewModelFactory(
@@ -67,14 +67,13 @@ class MemoContentFragment : Fragment() {
             memoContent = memoBinding.memoContentView.text.toString()
         }
 
-        memoContentFragmentViewModel.reflectMemoChange(sentMemo)
+        memoContentFragmentViewModel.updateMemo(sentMemo)
         closeKeyboard()
 
-        return NavigationUI.onNavDestinationSelected(
-            item,
-            view!!.findNavController()
-        )
-                || super.onOptionsItemSelected(item)
+        return view?.let { view ->
+            NavigationUI.onNavDestinationSelected(item, view.findNavController())
+        } ?: super.onOptionsItemSelected(item)
+
     }
 
 }
