@@ -9,7 +9,6 @@ import com.index197511.memo.R
 import com.index197511.memo.database.Memo
 
 class HomeRecyclerAdapter(
-//    private val memoList: List<Memo>,
     private val onItemClick: (view: View, position: Int) -> Unit
 ) : RecyclerView.Adapter<HomeRecyclerViewHolder>() {
 

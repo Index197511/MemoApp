@@ -4,14 +4,13 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.index197511.memo.database.Memo
-import com.index197511.memo.database.MemoDatabaseDao
 import com.index197511.memo.repository.MemoRepository
-import kotlinx.coroutines.*
+import kotlinx.coroutines.launch
 
 class MemoContentFragmentViewModel(
-    application: Application,
-    private val memoRepository: MemoRepository
+    application: Application
 ) : AndroidViewModel(application) {
+    private var memoRepository: MemoRepository = MemoRepository.getInstance(application)
 
     fun updateMemo(memo: Memo) {
         viewModelScope.launch {

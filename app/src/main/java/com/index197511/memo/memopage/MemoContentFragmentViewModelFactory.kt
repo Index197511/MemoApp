@@ -7,16 +7,14 @@ import com.index197511.memo.database.MemoDatabaseDao
 import com.index197511.memo.repository.MemoRepository
 
 class MemoContentFragmentViewModelFactory(
-    private val application: Application,
-    private val memoRepository: MemoRepository
+    private val application: Application
 ) : ViewModelProvider.Factory {
 
     @Suppress("unchecked_cast")
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(MemoContentFragmentViewModel::class.java)) {
             return MemoContentFragmentViewModel(
-                application,
-                memoRepository
+                application
             ) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")

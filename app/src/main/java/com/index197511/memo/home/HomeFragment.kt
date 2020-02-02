@@ -8,7 +8,7 @@ import android.view.*
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -18,7 +18,6 @@ import com.index197511.memo.R
 import com.index197511.memo.databinding.HomeFragmentBinding
 import com.index197511.memo.recycler.HomeRecyclerAdapter
 import com.index197511.memo.recycler.HomeRecyclerViewHolder
-import com.index197511.memo.repository.MemoRepository
 
 
 class HomeFragment : Fragment() {
@@ -37,16 +36,11 @@ class HomeFragment : Fragment() {
         binding.lifecycleOwner = this
 
         val application = requireNotNull(this.activity).application
-        val memoRepository = MemoRepository.getInstance(application)
 
-        val viewModelFactory =
-            HomeFragmentViewModelFactory(
-                application,
-                memoRepository
-            )
+        val viewModelFactory = HomeFragmentViewModelFactory(application)
 
         homeFragmentViewModel =
-            ViewModelProviders.of(this, viewModelFactory).get(HomeFragmentViewModel::class.java)
+            ViewModelProvider(this, viewModelFactory).get(HomeFragmentViewModel::class.java)
 
         //recyclerView
         val homeRecyclerAdapter =

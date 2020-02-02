@@ -9,8 +9,9 @@ import com.index197511.memo.database.Memo
 import com.index197511.memo.repository.MemoRepository
 import kotlinx.coroutines.runBlocking
 
-class HomeFragmentViewModel(application: Application, private val memoRepository: MemoRepository) :
+class HomeFragmentViewModel(application: Application) :
     AndroidViewModel(application) {
+    private var memoRepository: MemoRepository = MemoRepository.getInstance(application)
     val allMemoList: LiveData<List<Memo>> = memoRepository.allMemos
 
     fun deleteFromDatabase(position: Int) {

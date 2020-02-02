@@ -7,10 +7,10 @@ import com.index197511.memo.repository.MemoRepository
 import kotlinx.coroutines.runBlocking
 
 class AddMemoFragmentViewModel(
-    application: Application,
-    private val memoRepository: MemoRepository
+    application: Application
 ) :
     AndroidViewModel(application) {
+    private var memoRepository: MemoRepository = MemoRepository.getInstance(application)
 
     fun insertMemoToDatabase(memo: Memo) {
         runBlocking {

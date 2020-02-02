@@ -15,11 +15,10 @@ class MemoRepository(context: Context) {
         private var instance: MemoRepository? = null
 
         fun getInstance(context: Context) = instance ?: synchronized(this) {
-            instance ?: MemoRepository(
-                context.applicationContext
-            ).also {
-                instance = it
-            }
+            instance ?: MemoRepository(context.applicationContext)
+                .also {
+                    instance = it
+                }
         }
     }
 

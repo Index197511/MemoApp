@@ -4,14 +4,13 @@ import android.os.Bundle
 import android.view.*
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI
 import com.index197511.memo.R
 import com.index197511.memo.database.Memo
 import com.index197511.memo.databinding.AddMemoFragmentBinding
 import com.index197511.memo.ext.closeKeyboard
-import com.index197511.memo.repository.MemoRepository
 
 class AddMemoFragment : Fragment() {
 
@@ -26,16 +25,10 @@ class AddMemoFragment : Fragment() {
         addMemoBinding =
             DataBindingUtil.inflate(inflater, R.layout.add_memo_fragment, container, false)
         val application = requireNotNull(this.activity).application
-        val memoRepository = MemoRepository.getInstance(application)
-
-        val viewModelFactory =
-            AddMemoViewModelFactory(
-                application,
-                memoRepository
-            )
+        val viewModelFactory = AddMemoViewModelFactory(application)
 
         addMemoFragmentViewModel =
-            ViewModelProviders.of(this, viewModelFactory).get(AddMemoFragmentViewModel::class.java)
+            ViewModelProvider(this, viewModelFactory).get(AddMemoFragmentViewModel::class.java)
 
         setHasOptionsMenu(true)
 
@@ -52,11 +45,9 @@ class AddMemoFragment : Fragment() {
         insertMemoToDatabase()
         closeKeyboard()
 
-        return NavigationUI.onNavDestinationSelected(
-            item,
-            view!!.findNavController()
-        )
-                || super.onOptionsItemSelected(item)
+        return view?.let { view ->
+            NavigationUI.onNavDestinationSelected(item, view.findNavController())
+        } ?: super.onOptionsItemSelected(item)
     }
 
 

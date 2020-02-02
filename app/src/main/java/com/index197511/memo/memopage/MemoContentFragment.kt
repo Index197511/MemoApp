@@ -5,7 +5,7 @@ import android.os.Bundle
 import android.view.*
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.navigation.ui.NavigationUI
@@ -13,7 +13,6 @@ import com.index197511.memo.R
 import com.index197511.memo.database.Memo
 import com.index197511.memo.databinding.MemoPageFragmentBinding
 import com.index197511.memo.ext.closeKeyboard
-import com.index197511.memo.repository.MemoRepository
 
 class MemoContentFragment : Fragment() {
 
@@ -34,16 +33,11 @@ class MemoContentFragment : Fragment() {
             )
 
         val application = requireNotNull(this.activity).application
-        val memoRepository = MemoRepository.getInstance(application)
 
-        val viewModelFactory =
-            MemoContentFragmentViewModelFactory(
-                application,
-                memoRepository
-            )
+        val viewModelFactory = MemoContentFragmentViewModelFactory(application)
 
         memoContentFragmentViewModel =
-            ViewModelProviders.of(this, viewModelFactory)
+            ViewModelProvider(this, viewModelFactory)
                 .get(MemoContentFragmentViewModel::class.java)
 
         memoBinding.apply {
