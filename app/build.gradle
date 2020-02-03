@@ -57,9 +57,9 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutine_version"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutine_version"
 
-//    //Dagger
-//    implementation 'com.google.dagger:dagger:2.21'
-//    annotationProcessor 'com.google.dagger:dagger-compiler:2.21'
-//    kapt 'com.google.dagger:dagger-compiler:2.21'
-//    kaptTest 'com.google.dagger:dagger-compiler:2.21'
+    //Dagger
+    implementation 'com.google.dagger:dagger:2.21'
+    annotationProcessor 'com.google.dagger:dagger-compiler:2.21'
+    kapt 'com.google.dagger:dagger-compiler:2.21'
+    kaptTest 'com.google.dagger:dagger-compiler:2.21'
 }

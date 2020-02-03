@@ -5,6 +5,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.index197511.memo.database.MemoDatabaseDao
 import com.index197511.memo.repository.MemoRepository
+import javax.inject.Inject
+import javax.inject.Provider
 
 class HomeFragmentViewModelFactory(
     private val application: Application
