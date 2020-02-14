@@ -44,7 +44,7 @@ class HomeFragment : Fragment() {
             layoutManager = LinearLayoutManager(activity)
         }
 
-        homeFragmentViewModel.allMemoList.observe(this, Observer { memos ->
+        homeFragmentViewModel.allMemoList.observe(viewLifecycleOwner, Observer { memos ->
             memos?.also { homeRecyclerAdapter.setMemos(it) }
         })
 
