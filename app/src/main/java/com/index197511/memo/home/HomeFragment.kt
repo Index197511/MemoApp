@@ -8,7 +8,6 @@ import android.view.*
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -18,35 +17,29 @@ import com.index197511.memo.R
 import com.index197511.memo.databinding.HomeFragmentBinding
 import com.index197511.memo.recycler.HomeRecyclerAdapter
 import com.index197511.memo.recycler.HomeRecyclerViewHolder
+import org.koin.android.viewmodel.ext.android.viewModel
 
 
 class HomeFragment : Fragment() {
 
-    private lateinit var binding: HomeFragmentBinding
-    private lateinit var homeFragmentViewModel: HomeFragmentViewModel
+    private lateinit var homeFragmentBinding: HomeFragmentBinding
+    private val homeFragmentViewModel: HomeFragmentViewModel by viewModel()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = DataBindingUtil.inflate(
+        homeFragmentBinding = DataBindingUtil.inflate(
             inflater,
             R.layout.home_fragment, container, false
         )
-        binding.lifecycleOwner = this
-
-        val application = requireNotNull(this.activity).application
-
-        val viewModelFactory = HomeFragmentViewModelFactory(application)
-
-        homeFragmentViewModel =
-            ViewModelProvider(this, viewModelFactory).get(HomeFragmentViewModel::class.java)
+        homeFragmentBinding.lifecycleOwner = this
 
         //recyclerView
         val homeRecyclerAdapter =
             HomeRecyclerAdapter(this@HomeFragment::onItemClick)
 
-        val recyclerView = binding.memoRecyclerView.apply {
+        val recyclerView = homeFragmentBinding.memoRecyclerView.apply {
             adapter = homeRecyclerAdapter
             layoutManager = LinearLayoutManager(activity)
         }
@@ -59,7 +52,7 @@ class HomeFragment : Fragment() {
             .attachToRecyclerView(recyclerView)
         setHasOptionsMenu(true)
 
-        return binding.root
+        return homeFragmentBinding.root
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

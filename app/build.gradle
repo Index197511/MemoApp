@@ -62,4 +62,12 @@ dependencies {
     annotationProcessor 'com.google.dagger:dagger-compiler:2.21'
     kapt 'com.google.dagger:dagger-compiler:2.21'
     kaptTest 'com.google.dagger:dagger-compiler:2.21'
+
+    //Koin
+    implementation "org.koin:koin-core:2.0.1"
+    implementation "org.koin:koin-core-ext:2.0.1"
+    implementation "org.koin:koin-android:2.0.1"
+    implementation "org.koin:koin-android-scope:2.0.1"
+    implementation "org.koin:koin-android-viewmodel:2.0.1"
+    implementation "org.koin:koin-android-ext:2.0.1"
 }

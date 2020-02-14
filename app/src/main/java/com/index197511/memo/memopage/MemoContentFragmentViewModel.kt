@@ -1,21 +1,17 @@
 package com.index197511.memo.memopage
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.index197511.memo.database.Memo
 import com.index197511.memo.repository.MemoRepository
 import kotlinx.coroutines.launch
 
-class MemoContentFragmentViewModel(
-    application: Application
-) : AndroidViewModel(application) {
-    private var memoRepository: MemoRepository = MemoRepository.getInstance(application)
+class MemoContentFragmentViewModel(private val repository: MemoRepository) :
+    ViewModel() {
 
     fun updateMemo(memo: Memo) {
         viewModelScope.launch {
-            memoRepository.update(memo)
+            repository.update(memo)
         }
     }
-
 }

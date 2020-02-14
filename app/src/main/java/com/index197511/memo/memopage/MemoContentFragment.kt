@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.*
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.navigation.ui.NavigationUI
@@ -13,12 +12,13 @@ import com.index197511.memo.R
 import com.index197511.memo.database.Memo
 import com.index197511.memo.databinding.MemoPageFragmentBinding
 import com.index197511.memo.ext.closeKeyboard
+import org.koin.android.viewmodel.ext.android.viewModel
 
 class MemoContentFragment : Fragment() {
 
     private val args: MemoContentFragmentArgs by navArgs()
     private lateinit var memoBinding: MemoPageFragmentBinding
-    private lateinit var memoContentFragmentViewModel: MemoContentFragmentViewModel
+    private val memoContentFragmentViewModel: MemoContentFragmentViewModel by viewModel()
     private lateinit var sentMemo: Memo
 
     override fun onCreateView(
@@ -32,13 +32,6 @@ class MemoContentFragment : Fragment() {
                 R.layout.memo_page_fragment, container, false
             )
 
-        val application = requireNotNull(this.activity).application
-
-        val viewModelFactory = MemoContentFragmentViewModelFactory(application)
-
-        memoContentFragmentViewModel =
-            ViewModelProvider(this, viewModelFactory)
-                .get(MemoContentFragmentViewModel::class.java)
 
         memoBinding.apply {
             memoTitleView.setText(sentMemo.memoTitle)

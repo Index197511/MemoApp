@@ -1,21 +1,16 @@
 package com.index197511.memo.addmemo
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import com.index197511.memo.database.Memo
 import com.index197511.memo.repository.MemoRepository
 import kotlinx.coroutines.runBlocking
 
-class AddMemoFragmentViewModel(
-    application: Application
-) :
-    AndroidViewModel(application) {
-    private var memoRepository: MemoRepository = MemoRepository.getInstance(application)
+class AddMemoFragmentViewModel(private val repository: MemoRepository) :
+    ViewModel() {
 
     fun insertMemoToDatabase(memo: Memo) {
         runBlocking {
-            memoRepository.insert(memo)
+            repository.insert(memo)
         }
     }
-
 }

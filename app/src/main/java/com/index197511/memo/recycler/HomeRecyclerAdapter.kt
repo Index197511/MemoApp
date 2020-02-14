@@ -17,7 +17,6 @@ class HomeRecyclerAdapter(
 
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
         super.onAttachedToRecyclerView(recyclerView)
-
         this.recyclerView = recyclerView
     }
 
@@ -32,7 +31,6 @@ class HomeRecyclerAdapter(
         this.memos = memos
         notifyDataSetChanged()
     }
-
 
     override fun getItemCount(): Int = memos.size
 

@@ -4,36 +4,28 @@ import android.os.Bundle
 import android.view.*
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI
 import com.index197511.memo.R
 import com.index197511.memo.database.Memo
 import com.index197511.memo.databinding.AddMemoFragmentBinding
 import com.index197511.memo.ext.closeKeyboard
+import org.koin.android.viewmodel.ext.android.viewModel
 
 class AddMemoFragment : Fragment() {
 
-    private lateinit var addMemoFragmentViewModel: AddMemoFragmentViewModel
+    private val addMemoFragmentViewModel: AddMemoFragmentViewModel by viewModel()
     private lateinit var addMemoBinding: AddMemoFragmentBinding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
         addMemoBinding =
             DataBindingUtil.inflate(inflater, R.layout.add_memo_fragment, container, false)
-        val application = requireNotNull(this.activity).application
-        val viewModelFactory = AddMemoViewModelFactory(application)
-
-        addMemoFragmentViewModel =
-            ViewModelProvider(this, viewModelFactory).get(AddMemoFragmentViewModel::class.java)
 
         setHasOptionsMenu(true)
-
         return addMemoBinding.root
-
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -45,9 +37,11 @@ class AddMemoFragment : Fragment() {
         insertMemoToDatabase()
         closeKeyboard()
 
-        return view?.let { view ->
-            NavigationUI.onNavDestinationSelected(item, view.findNavController())
-        } ?: super.onOptionsItemSelected(item)
+        return view
+            ?.let { view ->
+                NavigationUI.onNavDestinationSelected(item, view.findNavController())
+            }
+            ?: super.onOptionsItemSelected(item)
     }
 
 
