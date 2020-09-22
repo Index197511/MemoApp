@@ -1,10 +1,10 @@
 package com.index197511.memo.memopage
 
-//MemoPageFragmentArgs
 import android.os.Bundle
 import android.view.*
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.navigation.ui.NavigationUI
@@ -12,13 +12,14 @@ import com.index197511.memo.R
 import com.index197511.memo.database.Memo
 import com.index197511.memo.databinding.MemoPageFragmentBinding
 import com.index197511.memo.ext.closeKeyboard
-import org.koin.android.viewmodel.ext.android.viewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MemoContentFragment : Fragment() {
 
+    private val viewModel by viewModels<MemoContentFragmentViewModel>()
     private val args: MemoContentFragmentArgs by navArgs()
     private lateinit var memoBinding: MemoPageFragmentBinding
-    private val memoContentFragmentViewModel: MemoContentFragmentViewModel by viewModel()
     private lateinit var sentMemo: Memo
 
     override fun onCreateView(
@@ -54,7 +55,7 @@ class MemoContentFragment : Fragment() {
             memoContent = memoBinding.memoContentView.text.toString()
         }
 
-        memoContentFragmentViewModel.updateMemo(sentMemo)
+        viewModel.updateMemo(sentMemo)
         closeKeyboard()
 
         return view?.let { view ->

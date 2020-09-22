@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.view.*
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI
@@ -17,13 +18,13 @@ import com.index197511.memo.R
 import com.index197511.memo.databinding.HomeFragmentBinding
 import com.index197511.memo.recycler.HomeRecyclerAdapter
 import com.index197511.memo.recycler.HomeRecyclerViewHolder
-import org.koin.android.viewmodel.ext.android.viewModel
+import dagger.hilt.android.AndroidEntryPoint
 
-
+@AndroidEntryPoint
 class HomeFragment : Fragment() {
 
     private lateinit var homeFragmentBinding: HomeFragmentBinding
-    private val homeFragmentViewModel: HomeFragmentViewModel by viewModel()
+    private val viewModel by viewModels<HomeFragmentViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -44,7 +45,7 @@ class HomeFragment : Fragment() {
             layoutManager = LinearLayoutManager(activity)
         }
 
-        homeFragmentViewModel.allMemoList.observe(viewLifecycleOwner, Observer { memos ->
+        viewModel.allMemoList.observe(viewLifecycleOwner, Observer { memos ->
             memos?.also { homeRecyclerAdapter.setMemos(it) }
         })
 
@@ -67,7 +68,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun onItemClick(tappedView: View, position: Int) {
-        homeFragmentViewModel.onItemClick(tappedView, position)
+        viewModel.onItemClick(tappedView, position)
     }
 
     private fun getSwipeToDismissTouchHelper(adapter: RecyclerView.Adapter<HomeRecyclerViewHolder>) =
@@ -84,7 +85,7 @@ class HomeFragment : Fragment() {
             }
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                homeFragmentViewModel.deleteFromDatabase(viewHolder.adapterPosition)
+                viewModel.deleteFromDatabase(viewHolder.adapterPosition)
 
                 adapter.apply {
                     notifyItemRemoved(viewHolder.adapterPosition)

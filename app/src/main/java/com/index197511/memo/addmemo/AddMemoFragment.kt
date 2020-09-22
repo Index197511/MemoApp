@@ -4,17 +4,19 @@ import android.os.Bundle
 import android.view.*
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI
 import com.index197511.memo.R
 import com.index197511.memo.database.Memo
 import com.index197511.memo.databinding.AddMemoFragmentBinding
 import com.index197511.memo.ext.closeKeyboard
-import org.koin.android.viewmodel.ext.android.viewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class AddMemoFragment : Fragment() {
 
-    private val addMemoFragmentViewModel: AddMemoFragmentViewModel by viewModel()
+    private val viewModel by viewModels<AddMemoFragmentViewModel>()
     private lateinit var addMemoBinding: AddMemoFragmentBinding
 
     override fun onCreateView(
@@ -50,7 +52,7 @@ class AddMemoFragment : Fragment() {
             memoTitle = addMemoBinding.titleText.text.toString(),
             memoContent = addMemoBinding.memoContentText.text.toString()
         )
-        addMemoFragmentViewModel.insertMemoToDatabase(newMemo)
+        viewModel.insertMemoToDatabase(newMemo)
     }
 
 }

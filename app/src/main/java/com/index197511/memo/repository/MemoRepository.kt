@@ -1,44 +1,34 @@
 package com.index197511.memo.repository
 
-import android.content.Context
 import androidx.lifecycle.LiveData
 import com.index197511.memo.database.Memo
-import com.index197511.memo.database.MemoDatabase
+import com.index197511.memo.database.MemoDatabaseDao
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
-class MemoRepository(context: Context) {
-    private val database = MemoDatabase.getInstance(context).memoDatabaseDao
-    var allMemos: LiveData<List<Memo>> = database.getAllMemo()
-
-    companion object {
-        private var instance: MemoRepository? = null
-
-        fun getInstance(context: Context) = instance ?: synchronized(this) {
-            instance ?: MemoRepository(context.applicationContext)
-                .also {
-                    instance = it
-                }
-        }
-    }
+class MemoRepository @Inject constructor(
+    private val dao: MemoDatabaseDao
+) {
+    var allMemos: LiveData<List<Memo>> = dao.getAllMemo()
 
     suspend fun insert(memo: Memo) {
         withContext(Dispatchers.IO) {
-            database.insert(memo)
-            allMemos = database.getAllMemo()
+            dao.insert(memo)
+            allMemos = dao.getAllMemo()
         }
     }
 
     suspend fun delete(memo: Memo) {
         withContext(Dispatchers.IO) {
-            database.delete(memo)
-            allMemos = database.getAllMemo()
+            dao.delete(memo)
+            allMemos = dao.getAllMemo()
         }
     }
 
     suspend fun update(memo: Memo) {
         withContext(Dispatchers.IO) {
-            database.update(memo)
+            dao.update(memo)
         }
     }
 
