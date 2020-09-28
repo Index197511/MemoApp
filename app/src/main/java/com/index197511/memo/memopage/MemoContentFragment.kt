@@ -29,8 +29,8 @@ class MemoContentFragment : Fragment() {
         binding = MemoPageFragmentBinding.inflate(inflater, container, false)
 
         binding.apply {
-            memoTitleView.setText(sentMemo.memoTitle)
-            memoContentView.setText(sentMemo.memoContent)
+            memoTitleView.setText(sentMemo.title)
+            memoContentView.setText(sentMemo.content)
         }
 
         setHasOptionsMenu(true)
@@ -43,13 +43,13 @@ class MemoContentFragment : Fragment() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        val updatedMemo = Memo(
+            id = args.content.id,
+            title = binding.memoTitleView.text.toString(),
+            content = binding.memoContentView.text.toString()
+        )
 
-        sentMemo.apply {
-            memoTitle = binding.memoTitleView.text.toString()
-            memoContent = binding.memoContentView.text.toString()
-        }
-
-        viewModel.updateMemo(sentMemo)
+        viewModel.updateMemo(updatedMemo)
         closeKeyboard()
 
         return view?.let { view ->

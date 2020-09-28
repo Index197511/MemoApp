@@ -46,8 +46,9 @@ class AddMemoFragment : Fragment() {
 
     private fun insertMemoToDatabase() {
         val newMemo = Memo(
-            memoTitle = binding.titleText.text.toString(),
-            memoContent = binding.memoContentText.text.toString()
+            id = 0,
+            title = binding.titleText.text.toString(),
+            content = binding.memoContentText.text.toString()
         )
         viewModel.insertMemoToDatabase(newMemo)
     }

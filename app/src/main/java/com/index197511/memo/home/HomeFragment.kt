@@ -1,7 +1,6 @@
 package com.index197511.memo.home
 
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -9,17 +8,19 @@ import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
+import com.afollestad.materialdialogs.MaterialDialog
 import com.index197511.memo.R
 import com.index197511.memo.database.Memo
 import com.index197511.memo.databinding.HomeFragmentBinding
+import com.index197511.memo.home.listitem.ListItem
 import com.xwray.groupie.Group
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
 import dagger.hilt.android.AndroidEntryPoint
 
-interface ListItemListener {
+interface ListItemClickHandler {
     fun onClick()
-    fun onSwipe()
+    fun onLongClick()
 }
 
 @AndroidEntryPoint
@@ -40,7 +41,7 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         binding.memoRecyclerView.adapter = adapter
-        viewModel.allMemoList.observe(viewLifecycleOwner, Observer {
+        viewModel.memos.observe(viewLifecycleOwner, Observer {
             updateMemoList(it)
         })
     }
@@ -59,19 +60,32 @@ class HomeFragment : Fragment() {
     private fun updateMemoList(memoList: List<Memo>) {
         adapter.update(mutableListOf<Group>().apply {
             memoList.forEach { memo ->
-                val handler = object : ListItemListener {
-                    override fun onClick() {
-                        val action =
-                            HomeFragmentDirections.actionHomeFragmentToMemoPageFragment(memo)
-                        findNavController().navigate(action)
-                    }
-
-                    override fun onSwipe() {
-                        Log.i("Index197511", "SWIPED")
-                    }
-                }
-                add(ListItem(handler, memo))
+                add(ListItem(memo, generateClickHandler(memo)))
             }
         })
+    }
+
+    private fun generateClickHandler(memo: Memo): ListItemClickHandler {
+        return object : ListItemClickHandler {
+            override fun onClick() {
+                val action = HomeFragmentDirections.actionHomeFragmentToMemoPageFragment(memo)
+                findNavController().navigate(action)
+            }
+
+            override fun onLongClick() {
+                showConfirmationOfDeletion(memo)
+            }
+        }
+    }
+
+    private fun showConfirmationOfDeletion(memo: Memo) {
+        MaterialDialog(this.requireContext()).show {
+            title(text = "Delete Dialog?")
+            message(text = "Delete ${memo.title}?")
+            positiveButton {
+                viewModel.delete(memo)
+            }
+            negativeButton()
+        }
     }
 }
