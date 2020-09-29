@@ -1,58 +1,49 @@
 package com.index197511.memo.home
 
-import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.*
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
-import androidx.recyclerview.widget.ItemTouchHelper
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import com.afollestad.materialdialogs.MaterialDialog
 import com.index197511.memo.R
+import com.index197511.memo.database.Memo
 import com.index197511.memo.databinding.HomeFragmentBinding
-import com.index197511.memo.recycler.HomeRecyclerAdapter
-import com.index197511.memo.recycler.HomeRecyclerViewHolder
-import org.koin.android.viewmodel.ext.android.viewModel
+import com.index197511.memo.home.listitem.ListItem
+import com.xwray.groupie.Group
+import com.xwray.groupie.GroupAdapter
+import com.xwray.groupie.GroupieViewHolder
+import dagger.hilt.android.AndroidEntryPoint
 
+interface ListItemClickHandler {
+    fun onClick()
+    fun onLongClick()
+}
 
+@AndroidEntryPoint
 class HomeFragment : Fragment() {
 
-    private lateinit var homeFragmentBinding: HomeFragmentBinding
-    private val homeFragmentViewModel: HomeFragmentViewModel by viewModel()
+    private lateinit var binding: HomeFragmentBinding
+    private val viewModel by viewModels<HomeFragmentViewModel>()
+    private val adapter = GroupAdapter<GroupieViewHolder>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        homeFragmentBinding = DataBindingUtil.inflate(
-            inflater,
-            R.layout.home_fragment, container, false
-        )
-        homeFragmentBinding.lifecycleOwner = this
-
-        //recyclerView
-        val homeRecyclerAdapter =
-            HomeRecyclerAdapter(this@HomeFragment::onItemClick)
-
-        val recyclerView = homeFragmentBinding.memoRecyclerView.apply {
-            adapter = homeRecyclerAdapter
-            layoutManager = LinearLayoutManager(activity)
-        }
-
-        homeFragmentViewModel.allMemoList.observe(viewLifecycleOwner, Observer { memos ->
-            memos?.also { homeRecyclerAdapter.setMemos(it) }
-        })
-
-        getSwipeToDismissTouchHelper(homeRecyclerAdapter)
-            .attachToRecyclerView(recyclerView)
+        binding = HomeFragmentBinding.inflate(inflater, container, false)
         setHasOptionsMenu(true)
+        return binding.root
+    }
 
-        return homeFragmentBinding.root
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        binding.memoRecyclerView.adapter = adapter
+        viewModel.memos.observe(viewLifecycleOwner, Observer {
+            updateMemoList(it)
+        })
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -66,70 +57,35 @@ class HomeFragment : Fragment() {
         } ?: super.onOptionsItemSelected(item)
     }
 
-    private fun onItemClick(tappedView: View, position: Int) {
-        homeFragmentViewModel.onItemClick(tappedView, position)
-    }
-
-    private fun getSwipeToDismissTouchHelper(adapter: RecyclerView.Adapter<HomeRecyclerViewHolder>) =
-        ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(
-            ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT,
-            ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
-        ) {
-            override fun onMove(
-                recyclerView: RecyclerView,
-                viewHolder: RecyclerView.ViewHolder,
-                target: RecyclerView.ViewHolder
-            ): Boolean {
-                return false
-            }
-
-            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                homeFragmentViewModel.deleteFromDatabase(viewHolder.adapterPosition)
-
-                adapter.apply {
-                    notifyItemRemoved(viewHolder.adapterPosition)
-                    notifyDataSetChanged()
-                }
-            }
-
-            override fun onChildDraw(
-                c: Canvas,
-                recyclerView: RecyclerView,
-                viewHolder: RecyclerView.ViewHolder,
-                dX: Float,
-                dY: Float,
-                actionState: Int,
-                isCurrentlyActive: Boolean
-            ) {
-                super.onChildDraw(
-                    c,
-                    recyclerView,
-                    viewHolder,
-                    dX,
-                    dY,
-                    actionState,
-                    isCurrentlyActive
-                )
-                val itemView = viewHolder.itemView
-                val background = ColorDrawable()
-                background.color = Color.parseColor("#f44336")
-                if (dX < 0)
-                    background.setBounds(
-                        itemView.right + dX.toInt(),
-                        itemView.top,
-                        itemView.right,
-                        itemView.bottom
-                    )
-                else
-                    background.setBounds(
-                        itemView.left,
-                        itemView.top,
-                        itemView.left + dX.toInt(),
-                        itemView.bottom
-                    )
-
-                background.draw(c)
+    private fun updateMemoList(memoList: List<Memo>) {
+        adapter.update(mutableListOf<Group>().apply {
+            memoList.forEach { memo ->
+                add(ListItem(memo, generateClickHandler(memo)))
             }
         })
+    }
 
+    private fun generateClickHandler(memo: Memo): ListItemClickHandler {
+        return object : ListItemClickHandler {
+            override fun onClick() {
+                val action = HomeFragmentDirections.actionHomeFragmentToMemoPageFragment(memo)
+                findNavController().navigate(action)
+            }
+
+            override fun onLongClick() {
+                showConfirmationOfDeletion(memo)
+            }
+        }
+    }
+
+    private fun showConfirmationOfDeletion(memo: Memo) {
+        MaterialDialog(this.requireContext()).show {
+            title(text = "Delete Dialog?")
+            message(text = "Delete ${memo.title}?")
+            positiveButton(text = "DELETE") {
+                viewModel.delete(memo)
+            }
+            negativeButton()
+        }
+    }
 }

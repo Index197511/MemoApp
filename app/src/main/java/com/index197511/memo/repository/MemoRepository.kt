@@ -1,45 +1,44 @@
 package com.index197511.memo.repository
 
-import android.content.Context
-import androidx.lifecycle.LiveData
 import com.index197511.memo.database.Memo
-import com.index197511.memo.database.MemoDatabase
+import com.index197511.memo.database.MemoDatabaseDao
+import com.index197511.memo.database.toEntity
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
-class MemoRepository(context: Context) {
-    private val database = MemoDatabase.getInstance(context).memoDatabaseDao
-    var allMemos: LiveData<List<Memo>> = database.getAllMemo()
+interface IMemoRepository {
+    suspend fun insert(memo: Memo)
+    suspend fun delete(memo: Memo)
+    suspend fun update(memo: Memo)
+    fun loadAllMemo(): Flow<List<Memo>>
+}
 
-    companion object {
-        private var instance: MemoRepository? = null
+class MemoRepository @Inject constructor(
+    private val dao: MemoDatabaseDao
+) : IMemoRepository {
 
-        fun getInstance(context: Context) = instance ?: synchronized(this) {
-            instance ?: MemoRepository(context.applicationContext)
-                .also {
-                    instance = it
-                }
-        }
-    }
-
-    suspend fun insert(memo: Memo) {
+    override suspend fun insert(memo: Memo) {
         withContext(Dispatchers.IO) {
-            database.insert(memo)
-            allMemos = database.getAllMemo()
+            dao.insert(memo.toEntity())
         }
     }
 
-    suspend fun delete(memo: Memo) {
+    override suspend fun delete(memo: Memo) {
         withContext(Dispatchers.IO) {
-            database.delete(memo)
-            allMemos = database.getAllMemo()
+            dao.delete(memo.toEntity())
         }
     }
 
-    suspend fun update(memo: Memo) {
+    override suspend fun update(memo: Memo) {
         withContext(Dispatchers.IO) {
-            database.update(memo)
+            dao.update(memo.toEntity())
         }
     }
 
+    override fun loadAllMemo(): Flow<List<Memo>> {
+        return dao.loadAllMemo().map { memos -> memos.map { it.toModel() } }
+    }
 }

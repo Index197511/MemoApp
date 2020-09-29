@@ -1,21 +1,19 @@
 package com.index197511.memo.database
 
-import androidx.lifecycle.LiveData
 import androidx.room.*
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface MemoDatabaseDao {
-
     @Insert
-    fun insert(memo: Memo)
+    suspend fun insert(memo: MemoEntity)
 
     @Update
-    fun update(memo: Memo)
-
-    @Query("SELECT * FROM memo_table ORDER BY memoId DESC")
-    fun getAllMemo(): LiveData<List<Memo>>
+    suspend fun update(memo: MemoEntity)
 
     @Delete
-    fun delete(memo: Memo)
+    suspend fun delete(memo: MemoEntity)
 
+    @Query("SELECT * FROM memo_table ORDER BY id DESC")
+    fun loadAllMemo(): Flow<List<MemoEntity>>
 }

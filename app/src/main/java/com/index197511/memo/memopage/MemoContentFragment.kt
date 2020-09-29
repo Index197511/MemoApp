@@ -1,10 +1,9 @@
 package com.index197511.memo.memopage
 
-//MemoPageFragmentArgs
 import android.os.Bundle
 import android.view.*
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.navigation.ui.NavigationUI
@@ -12,13 +11,14 @@ import com.index197511.memo.R
 import com.index197511.memo.database.Memo
 import com.index197511.memo.databinding.MemoPageFragmentBinding
 import com.index197511.memo.ext.closeKeyboard
-import org.koin.android.viewmodel.ext.android.viewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MemoContentFragment : Fragment() {
 
+    private val viewModel by viewModels<MemoContentFragmentViewModel>()
     private val args: MemoContentFragmentArgs by navArgs()
-    private lateinit var memoBinding: MemoPageFragmentBinding
-    private val memoContentFragmentViewModel: MemoContentFragmentViewModel by viewModel()
+    private lateinit var binding: MemoPageFragmentBinding
     private lateinit var sentMemo: Memo
 
     override fun onCreateView(
@@ -26,20 +26,17 @@ class MemoContentFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         sentMemo = args.content
-        memoBinding =
-            DataBindingUtil.inflate(
-                inflater,
-                R.layout.memo_page_fragment, container, false
-            )
-
-
-        memoBinding.apply {
-            memoTitleView.setText(sentMemo.memoTitle)
-            memoContentView.setText(sentMemo.memoContent)
-        }
+        binding = MemoPageFragmentBinding.inflate(inflater, container, false)
 
         setHasOptionsMenu(true)
-        return memoBinding.root
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        binding.apply {
+            memoTitleView.setText(sentMemo.title)
+            memoContentView.setText(sentMemo.content)
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -48,19 +45,18 @@ class MemoContentFragment : Fragment() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        val updatedMemo = Memo(
+            id = args.content.id,
+            title = binding.memoTitleView.text.toString(),
+            content = binding.memoContentView.text.toString()
+        )
 
-        sentMemo.apply {
-            memoTitle = memoBinding.memoTitleView.text.toString()
-            memoContent = memoBinding.memoContentView.text.toString()
-        }
-
-        memoContentFragmentViewModel.updateMemo(sentMemo)
+        viewModel.update(updatedMemo)
         closeKeyboard()
 
         return view?.let { view ->
             NavigationUI.onNavDestinationSelected(item, view.findNavController())
         } ?: super.onOptionsItemSelected(item)
-
     }
 
 }
