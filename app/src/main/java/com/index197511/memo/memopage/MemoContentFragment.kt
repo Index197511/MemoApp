@@ -28,13 +28,15 @@ class MemoContentFragment : Fragment() {
         sentMemo = args.content
         binding = MemoPageFragmentBinding.inflate(inflater, container, false)
 
+        setHasOptionsMenu(true)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         binding.apply {
             memoTitleView.setText(sentMemo.title)
             memoContentView.setText(sentMemo.content)
         }
-
-        setHasOptionsMenu(true)
-        return binding.root
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -49,13 +51,12 @@ class MemoContentFragment : Fragment() {
             content = binding.memoContentView.text.toString()
         )
 
-        viewModel.updateMemo(updatedMemo)
+        viewModel.update(updatedMemo)
         closeKeyboard()
 
         return view?.let { view ->
             NavigationUI.onNavDestinationSelected(item, view.findNavController())
         } ?: super.onOptionsItemSelected(item)
-
     }
 
 }

@@ -82,7 +82,7 @@ class HomeFragment : Fragment() {
         MaterialDialog(this.requireContext()).show {
             title(text = "Delete Dialog?")
             message(text = "Delete ${memo.title}?")
-            positiveButton {
+            positiveButton(text = "DELETE") {
                 viewModel.delete(memo)
             }
             negativeButton()

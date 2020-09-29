@@ -39,6 +39,6 @@ class MemoRepository @Inject constructor(
     }
 
     override fun loadAllMemo(): Flow<List<Memo>> {
-        return dao.loadAllMemo().map { memos -> memos.map { e -> e.toModel() } }
+        return dao.loadAllMemo().map { memos -> memos.map { it.toModel() } }
     }
 }

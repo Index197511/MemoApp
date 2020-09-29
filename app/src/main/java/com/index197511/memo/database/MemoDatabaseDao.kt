@@ -5,7 +5,6 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface MemoDatabaseDao {
-
     @Insert
     suspend fun insert(memo: MemoEntity)
 

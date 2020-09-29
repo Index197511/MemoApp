@@ -50,6 +50,6 @@ class AddMemoFragment : Fragment() {
             title = binding.titleText.text.toString(),
             content = binding.memoContentText.text.toString()
         )
-        viewModel.insertMemoToDatabase(newMemo)
+        viewModel.insertMemo(newMemo)
     }
 }
